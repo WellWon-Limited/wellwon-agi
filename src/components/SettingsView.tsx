@@ -2,6 +2,7 @@ import {
   X, ChevronRight, Globe, Volume2, Sparkles, Bell, Map, ShoppingBag,
   Contrast, Send, Eye
 } from "lucide-react";
+import avatarImg from "@/assets/avatar.jpg";
 
 interface SettingsViewProps {
   onClose: () => void;
@@ -40,7 +41,7 @@ const MenuItem = ({
 
 const SettingsView = ({ onClose }: SettingsViewProps) => {
   return (
-    <div className="flex flex-col h-[100dvh] bg-card max-w-lg mx-auto view-slide-in">
+    <div className="flex flex-col flex-1 min-h-0 bg-card max-w-lg mx-auto view-slide-in">
       {/* Header */}
       <div className="px-4 pt-12 pb-4 flex items-center justify-between shrink-0">
         <button
@@ -55,7 +56,9 @@ const SettingsView = ({ onClose }: SettingsViewProps) => {
 
       {/* Profile */}
       <div className="px-4 py-4 flex items-center gap-3 shrink-0">
-        <div className="w-14 h-14 rounded-full bg-muted border border-border" />
+        <div className="w-14 h-14 rounded-full overflow-hidden border border-border">
+          <img src={avatarImg} alt="Avatar" className="w-full h-full object-cover" />
+        </div>
         <div>
           <div className="text-foreground font-semibold text-[17px]">ons_wellwon</div>
           <div className="text-primary text-[14px]">Управление аккаунтом</div>

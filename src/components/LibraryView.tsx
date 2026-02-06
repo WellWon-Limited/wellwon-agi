@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowLeft, Search, Clock, MoreHorizontal, MessageSquare, LayoutGrid, PenSquare, Layers, Briefcase, GraduationCap, Code, Lightbulb } from "lucide-react";
+import avatarImg from "@/assets/avatar.jpg";
 
 interface LibraryViewProps {
   onBack: () => void;
@@ -69,7 +70,7 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
   const [tab, setTab] = useState<"chats" | "spaces">("chats");
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto view-slide-in-from-left">
+    <div className="flex flex-col flex-1 min-h-0 bg-background max-w-lg mx-auto view-slide-in-from-left">
       {/* Header */}
       <div className="px-4 pt-12 pb-3 flex items-center justify-between shrink-0">
         <button
@@ -80,7 +81,7 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
         </button>
         <span className="font-semibold text-foreground text-[17px]">Библиотека</span>
         <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden flex items-center justify-center">
-          <img src="/placeholder.svg" alt="Avatar" className="w-full h-full object-cover" />
+          <img src={avatarImg} alt="Avatar" className="w-full h-full object-cover" />
         </div>
       </div>
 
