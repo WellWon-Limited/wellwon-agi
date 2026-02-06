@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Library } from "lucide-react";
+import { Library, Menu } from "lucide-react";
 import Logo from "@/components/Logo";
 import ChatInput from "@/components/ChatInput";
 import ChatMessage from "@/components/ChatMessage";
@@ -56,16 +56,16 @@ const Index = () => {
       {/* Header */}
       <header className="flex items-center justify-between px-4 pt-12 pb-3 shrink-0">
         <button
-          onClick={() => setView("settings")}
-          className="w-8 h-8 rounded-full bg-secondary border border-border overflow-hidden flex items-center justify-center"
-        >
-          <img src="/placeholder.svg" alt="Avatar" className="w-full h-full object-cover" />
-        </button>
-        <button
           onClick={() => setView("library")}
           className="w-10 h-10 flex items-center justify-center bg-card rounded-xl text-secondary-foreground border border-border active:scale-95 transition-transform"
         >
-          <Library size={22} strokeWidth={1.5} />
+          <Menu size={22} strokeWidth={1.5} />
+        </button>
+        <button
+          onClick={() => setView("settings")}
+          className="w-9 h-9 rounded-full bg-secondary border border-border overflow-hidden flex items-center justify-center"
+        >
+          <img src="/placeholder.svg" alt="Avatar" className="w-full h-full object-cover" />
         </button>
       </header>
 

@@ -1,4 +1,4 @@
-import { ArrowLeft, Sparkles, Globe, Image as ImageIcon, Share, Mic, Plus, ExternalLink } from "lucide-react";
+import { ArrowLeft, Sparkles, Globe, Image as ImageIcon, Share, Mic, Plus, ExternalLink, Upload, RotateCcw, Copy, MoreHorizontal, Square } from "lucide-react";
 import { useState } from "react";
 
 interface ChatResponseViewProps {
@@ -15,120 +15,111 @@ const mockSources = [
 
 const ChatResponseView = ({ onBack }: ChatResponseViewProps) => {
   const [followUp, setFollowUp] = useState("");
+  const [isThinking, setIsThinking] = useState(false);
+
+  const handleFollowUpSend = () => {
+    if (!followUp.trim()) return;
+    setFollowUp("");
+    // mock: would send follow-up
+  };
 
   return (
     <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto view-slide-in">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-12 pb-3 shrink-0">
-        <button onClick={onBack} className="p-2 -ml-2 text-muted-foreground hover:text-foreground">
-          <ArrowLeft size={24} />
+        <button onClick={onBack} className="w-10 h-10 flex items-center justify-center rounded-full bg-card border border-border text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft size={20} />
         </button>
         <div className="flex bg-card rounded-full p-1 border border-border">
           <button className="px-4 py-1.5 rounded-full bg-secondary text-primary">
             <Sparkles size={18} />
           </button>
-          <button className="px-4 py-1.5 rounded-full text-muted-foreground hover:text-foreground">
+          <button className="px-4 py-1.5 rounded-full text-muted-foreground hover:text-foreground transition-colors">
             <Globe size={18} />
           </button>
-          <button className="px-4 py-1.5 rounded-full text-muted-foreground hover:text-foreground">
+          <button className="px-4 py-1.5 rounded-full text-muted-foreground hover:text-foreground transition-colors">
             <ImageIcon size={18} />
           </button>
         </div>
-        <button className="p-2 -mr-2 text-muted-foreground hover:text-foreground">
-          <Share size={22} />
+        <button className="w-10 h-10 flex items-center justify-center rounded-full bg-card border border-border text-muted-foreground hover:text-foreground transition-colors">
+          <Upload size={20} />
         </button>
       </div>
 
-      <div className="h-px bg-border mx-4" />
-
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-5 pb-32">
-        {/* Sources */}
-        <div className="mt-5 mb-6">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-[13px] font-medium text-muted-foreground uppercase tracking-wider">Источники</span>
-            <span className="text-[11px] text-muted-foreground bg-secondary rounded-full px-2 py-0.5">{mockSources.length}</span>
+        {/* User message bubble */}
+        <div className="flex justify-end mt-4 mb-6">
+          <div className="bg-card border border-border rounded-2xl px-4 py-3 max-w-[85%]">
+            <p className="text-[15px] text-foreground">Пдалаьадалпбалвь</p>
+            <p className="text-[15px] text-foreground">Влада</p>
+            <p className="text-[15px] text-foreground">Давала</p>
+            <p className="text-[15px] text-foreground">Задал</p>
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
-            {mockSources.map((source) => (
-              <button
-                key={source.id}
-                className="flex items-center gap-2 bg-card border border-border rounded-xl px-3 py-2.5 shrink-0 hover:bg-secondary transition-colors group"
-              >
-                <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-[11px] font-bold flex items-center justify-center shrink-0">
-                  {source.id}
-                </span>
-                <div className="text-left">
-                  <p className="text-[13px] text-foreground font-medium line-clamp-1 leading-tight">{source.name}</p>
-                  <p className="text-[11px] text-muted-foreground leading-tight">{source.domain}</p>
-                </div>
-                <ExternalLink size={12} className="text-muted-foreground shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-            ))}
+        </div>
+
+        {/* Thinking indicator / Sources */}
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles size={16} className="text-primary" />
+            <span className="text-[13px] text-muted-foreground">Активен...</span>
           </div>
         </div>
 
         {/* Answer */}
-        <div>
-          <h2 className="text-[20px] font-semibold text-foreground mb-5">Выводы</h2>
-          <div className="space-y-5 text-[15px] leading-relaxed text-foreground/85">
-            <div className="flex gap-3">
-              <span className="text-muted-foreground font-medium shrink-0">1.</span>
-              <div>
-                При полной нагрузке генератор работает эффективнее:{" "}
-                <span className="font-semibold text-foreground">4,5 руб за 1 кВт·ч</span> — это почти в 1,3 раза
-                дешевле, чем при половинной нагрузке.
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <span className="text-muted-foreground font-medium shrink-0">2.</span>
-              <div>
-                При частичной нагрузке (50%) себестоимость поднимается до{" "}
-                <span className="font-semibold text-foreground">5,8 руб/кВт·ч</span>, так как относительный расход
-                газа на единицу выработанной энергии растёт.
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <span className="text-muted-foreground font-medium shrink-0">3.</span>
-              <div>
-                Для сравнения: розничный тариф на электроэнергию для населения в Ленобласти в 2026 году составляет
-                примерно <span className="font-semibold text-foreground">5,5–7 руб/кВт·ч</span> (зависит от зоны и
-                поставщика).
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <span className="text-muted-foreground font-medium shrink-0">4.</span>
-              <div>
-                Не забывайте: это только топливная составляющая. К ней нужно добавить амортизацию генератора
-                (стоимость ~400–500 тыс. руб, ресурс двигателя ~6000 моточасов).
-              </div>
+        <div className="mb-6">
+          <div className="border-l-2 border-border pl-4">
+            <div className="space-y-4 text-[15px] leading-relaxed text-foreground/85">
+              <p>
+                Я вижу, что ваше сообщение выглядит как случайный набор букв или возможная опечатка.
+                Среди текста можно разобрать несколько русских слов: "Влада", "Давала", "Задал".
+              </p>
+              <p>
+                Могу ли я чем-то помочь? Пожалуйста, уточните ваш вопрос, и я с удовольствием предоставлю нужную
+                информацию или помогу с решением задачи.
+              </p>
             </div>
           </div>
-          <p className="mt-6 text-[15px] leading-relaxed text-foreground/85">
-            Если нужна более мощная модель (ближе к 20 кВт) или трёхфазная — есть аналогичные генераторы той же серии
-            CTG и других брендов (POWERON, Generac, Gazvolt) с похожими характеристиками расхода.
-          </p>
+
+          {/* Action buttons like Perplexity */}
+          <div className="flex items-center justify-between mt-5">
+            <div className="flex items-center gap-1">
+              <button className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Поделиться">
+                <Upload size={18} />
+              </button>
+              <button className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Перегенерировать">
+                <RotateCcw size={18} />
+              </button>
+              <button className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Копировать">
+                <Copy size={18} />
+              </button>
+            </div>
+            <button className="p-2 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" title="Ещё">
+              <MoreHorizontal size={18} />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Follow-up input with glass effect */}
       <div className="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-background/80 backdrop-blur-lg">
-        <div className="max-w-lg mx-auto glass-input rounded-[28px] p-2 pl-4 flex items-center justify-between">
-          <input
-            type="text"
-            value={followUp}
-            onChange={(e) => setFollowUp(e.target.value)}
-            placeholder="Задайте уточняющий вопрос..."
-            className="bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground text-[15px] w-full"
-          />
-          <div className="flex items-center gap-1">
-            <button className="p-2 text-muted-foreground hover:text-foreground">
-              <Mic size={20} />
-            </button>
-            <button className="p-2 bg-primary rounded-full text-primary-foreground">
-              <Plus size={20} />
+        <div className="max-w-lg mx-auto flex items-center gap-2">
+          <div className="flex-1 glass-input rounded-full p-2 pl-4 flex items-center">
+            <input
+              type="text"
+              value={followUp}
+              onChange={(e) => setFollowUp(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleFollowUpSend()}
+              placeholder="Задайте уточняющий вопрос..."
+              className="bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground text-[15px] w-full"
+            />
+            <button className="p-2 text-muted-foreground hover:text-foreground shrink-0">
+              {followUp.trim() ? <Square size={18} /> : <Mic size={20} />}
             </button>
           </div>
+          <button className="w-11 h-11 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground shrink-0 transition-colors">
+            <Plus size={20} className="rotate-0" />
+          </button>
         </div>
       </div>
     </div>

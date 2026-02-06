@@ -36,7 +36,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   return (
     <div className="px-4 pb-6 pt-2">
-      <div className="glass-input rounded-2xl">
+      <div className="glass-input rounded-[24px]">
         <textarea
           ref={textareaRef}
           value={value}
