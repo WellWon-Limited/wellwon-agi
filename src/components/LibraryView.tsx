@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Settings, ArrowRight, Search, Clock, MoreHorizontal, MessageSquare, LayoutGrid, PenSquare, Layers, Briefcase, GraduationCap, Code, Lightbulb } from "lucide-react";
+import { ArrowLeft, Search, Clock, MoreHorizontal, MessageSquare, LayoutGrid, PenSquare, Layers, Briefcase, GraduationCap, Code, Lightbulb } from "lucide-react";
 
 interface LibraryViewProps {
   onBack: () => void;
@@ -69,19 +69,19 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
   const [tab, setTab] = useState<"chats" | "spaces">("chats");
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto view-slide-in">
+    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto view-slide-in-from-left">
       {/* Header */}
       <div className="px-4 pt-12 pb-3 flex items-center justify-between shrink-0">
-        <button className="w-10 h-10 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">
-          <Settings size={24} strokeWidth={1.5} />
-        </button>
-        <span className="font-semibold text-foreground text-[17px]">ons_wellwon</span>
         <button
           onClick={onBack}
-          className="w-10 h-10 flex items-center justify-center bg-card rounded-full text-foreground border border-border hover:bg-secondary transition-colors"
+          className="w-10 h-10 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors"
         >
-          <ArrowRight size={20} />
+          <ArrowLeft size={20} />
         </button>
+        <span className="font-semibold text-foreground text-[17px]">Библиотека</span>
+        <div className="w-10 h-10 rounded-full bg-secondary border border-border overflow-hidden flex items-center justify-center">
+          <img src="/placeholder.svg" alt="Avatar" className="w-full h-full object-cover" />
+        </div>
       </div>
 
       {/* Search */}
@@ -145,11 +145,11 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
       </div>
 
       {/* Bottom Nav */}
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center pointer-events-none">
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center pointer-events-none px-4">
         <div className="flex items-center bg-card border border-border rounded-full p-1 pointer-events-auto shadow-2xl">
           <button
             onClick={() => setTab("chats")}
-            className={`px-5 py-2.5 rounded-full text-[13px] font-medium flex items-center gap-2 transition-colors ${
+            className={`px-4 py-2.5 rounded-full text-[13px] font-medium flex items-center gap-2 transition-colors ${
               tab === "chats" ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
@@ -157,15 +157,15 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
           </button>
           <button
             onClick={() => setTab("spaces")}
-            className={`px-5 py-2.5 rounded-full text-[13px] font-medium flex items-center gap-2 transition-colors ${
+            className={`px-4 py-2.5 rounded-full text-[13px] font-medium flex items-center gap-2 transition-colors ${
               tab === "spaces" ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <LayoutGrid size={16} className={tab === "spaces" ? "text-primary" : ""} /> Пространства
           </button>
         </div>
-        <button className="absolute right-4 bottom-0 w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-foreground border border-border shadow-lg pointer-events-auto hover:bg-muted transition-colors">
-          <PenSquare size={20} />
+        <button className="ml-3 w-11 h-11 bg-secondary rounded-full flex items-center justify-center text-foreground border border-border shadow-lg pointer-events-auto hover:bg-muted transition-colors">
+          <PenSquare size={18} />
         </button>
       </div>
     </div>
