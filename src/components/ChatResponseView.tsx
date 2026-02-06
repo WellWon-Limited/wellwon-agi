@@ -17,7 +17,7 @@ const ChatResponseView = ({ onBack }: ChatResponseViewProps) => {
   const [followUp, setFollowUp] = useState("");
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto">
+    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto view-slide-in">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-12 pb-3 shrink-0">
         <button onClick={onBack} className="p-2 -ml-2 text-muted-foreground hover:text-foreground">

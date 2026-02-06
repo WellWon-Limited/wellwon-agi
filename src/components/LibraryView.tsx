@@ -69,7 +69,7 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
   const [tab, setTab] = useState<"chats" | "spaces">("chats");
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto">
+    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto view-slide-in">
       {/* Header */}
       <div className="px-4 pt-12 pb-3 flex items-center justify-between shrink-0">
         <button className="w-10 h-10 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground transition-colors">

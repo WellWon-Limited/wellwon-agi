@@ -40,7 +40,7 @@ const MenuItem = ({
 
 const SettingsView = ({ onClose }: SettingsViewProps) => {
   return (
-    <div className="flex flex-col h-[100dvh] bg-card max-w-lg mx-auto animate-in slide-in-from-bottom duration-300">
+    <div className="flex flex-col h-[100dvh] bg-card max-w-lg mx-auto view-slide-in">
       {/* Header */}
       <div className="px-4 pt-12 pb-4 flex items-center justify-between shrink-0">
         <button
