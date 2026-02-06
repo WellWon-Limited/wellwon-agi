@@ -26,7 +26,7 @@ const DiscoverView = ({ onBack }: DiscoverViewProps) => {
   const [activeCategory, setActiveCategory] = useState(0);
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-background max-w-lg mx-auto view-slide-in">
+    <div className="flex flex-col flex-1 min-h-0 bg-background max-w-lg mx-auto view-slide-in">
       {/* Header */}
       <div className="px-4 pt-12 pb-3 flex items-center justify-between shrink-0">
         <button onClick={onBack} className="w-10 h-10 flex items-center justify-center rounded-full text-muted-foreground hover:text-foreground">
