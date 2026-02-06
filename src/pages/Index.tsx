@@ -59,7 +59,7 @@ const Index = () => {
           onClick={() => setView("settings")}
           className="w-8 h-8 rounded-full bg-secondary border border-border overflow-hidden flex items-center justify-center"
         >
-          <div className="w-full h-full bg-muted" />
+          <img src="/placeholder.svg" alt="Avatar" className="w-full h-full object-cover" />
         </button>
         <button
           onClick={() => setView("library")}

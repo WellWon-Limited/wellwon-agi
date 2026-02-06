@@ -36,7 +36,7 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   return (
     <div className="px-4 pb-6 pt-2">
-      <div className="bg-card rounded-2xl border border-border shadow-lg">
+      <div className="glass-input rounded-2xl">
         <textarea
           ref={textareaRef}
           value={value}

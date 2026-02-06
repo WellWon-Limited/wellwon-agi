@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Settings, ArrowRight, Search, Clock, MoreHorizontal, MessageSquare, LayoutGrid, PenSquare, Layers } from "lucide-react";
+import { Settings, ArrowRight, Search, Clock, MoreHorizontal, MessageSquare, LayoutGrid, PenSquare, Layers, Briefcase, GraduationCap, Code, Lightbulb } from "lucide-react";
 
 interface LibraryViewProps {
   onBack: () => void;
@@ -30,6 +30,41 @@ const mockChats = [
   },
 ];
 
+const mockSpaces = [
+  {
+    icon: Briefcase,
+    color: "text-blue-400",
+    bgColor: "bg-blue-400/10",
+    title: "Рабочие проекты",
+    description: "Задачи, планирование, бизнес-анализ",
+    count: 12,
+  },
+  {
+    icon: GraduationCap,
+    color: "text-emerald-400",
+    bgColor: "bg-emerald-400/10",
+    title: "Обучение",
+    description: "Курсы, статьи, заметки по саморазвитию",
+    count: 8,
+  },
+  {
+    icon: Code,
+    color: "text-purple-400",
+    bgColor: "bg-purple-400/10",
+    title: "Разработка",
+    description: "Код, документация, дебаг сессии",
+    count: 24,
+  },
+  {
+    icon: Lightbulb,
+    color: "text-amber-400",
+    bgColor: "bg-amber-400/10",
+    title: "Идеи",
+    description: "Брейнштормы, концепции, черновики",
+    count: 5,
+  },
+];
+
 const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
   const [tab, setTab] = useState<"chats" | "spaces">("chats");
 
@@ -57,35 +92,56 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
         </div>
       </div>
 
-      {/* Chat List */}
+      {/* Content */}
       <div className="flex-1 overflow-y-auto px-4 pb-28">
-        {mockChats.map((chat, i) => (
-          <div
-            key={i}
-            onClick={onOpenChat}
-            className={`cursor-pointer py-4 ${i > 0 ? "border-t border-border" : ""}`}
-          >
-            <div className="flex justify-between items-start mb-1">
-              <h3 className="text-[16px] font-medium text-foreground line-clamp-2 leading-snug w-[90%]">
-                {chat.title}
-              </h3>
-              <MoreHorizontal size={18} className="text-muted-foreground shrink-0" />
-            </div>
-            <p className="text-muted-foreground text-[14px] line-clamp-2 mb-2 leading-relaxed">
-              {chat.preview}
-            </p>
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Clock size={12} /> {chat.time}
+        {tab === "chats" ? (
+          mockChats.map((chat, i) => (
+            <div
+              key={i}
+              onClick={onOpenChat}
+              className={`cursor-pointer py-4 group ${i > 0 ? "border-t border-border" : ""}`}
+            >
+              <div className="flex justify-between items-start mb-1">
+                <h3 className="text-[16px] font-medium text-foreground line-clamp-2 leading-snug w-[90%] group-hover:text-primary transition-colors">
+                  {chat.title}
+                </h3>
+                <MoreHorizontal size={18} className="text-muted-foreground shrink-0" />
               </div>
-              {chat.tag && (
-                <div className="flex items-center gap-1 text-primary">
-                  <Layers size={12} /> {chat.tag}
+              <p className="text-muted-foreground text-[14px] line-clamp-2 mb-2 leading-relaxed">
+                {chat.preview}
+              </p>
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Clock size={12} /> {chat.time}
                 </div>
-              )}
+                {chat.tag && (
+                  <div className="flex items-center gap-1 text-primary">
+                    <Layers size={12} /> {chat.tag}
+                  </div>
+                )}
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="grid grid-cols-2 gap-3 mt-2">
+            {mockSpaces.map((space, i) => {
+              const Icon = space.icon;
+              return (
+                <div
+                  key={i}
+                  className="bg-card border border-border rounded-2xl p-4 cursor-pointer hover:border-primary/30 transition-colors"
+                >
+                  <div className={`w-10 h-10 rounded-xl ${space.bgColor} flex items-center justify-center mb-3`}>
+                    <Icon size={20} className={space.color} />
+                  </div>
+                  <h3 className="text-[15px] font-medium text-foreground mb-1">{space.title}</h3>
+                  <p className="text-[12px] text-muted-foreground leading-snug mb-2">{space.description}</p>
+                  <span className="text-[11px] text-muted-foreground">{space.count} бесед</span>
+                </div>
+              );
+            })}
           </div>
-        ))}
+        )}
       </div>
 
       {/* Bottom Nav */}
@@ -105,7 +161,7 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
               tab === "spaces" ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <LayoutGrid size={16} /> Пространства
+            <LayoutGrid size={16} className={tab === "spaces" ? "text-primary" : ""} /> Пространства
           </button>
         </div>
         <button className="absolute right-4 bottom-0 w-12 h-12 bg-secondary rounded-full flex items-center justify-center text-foreground border border-border shadow-lg pointer-events-auto hover:bg-muted transition-colors">
