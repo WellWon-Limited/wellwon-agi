@@ -98,6 +98,18 @@ const ChatResponseView = ({ onBack }: ChatResponseViewProps) => {
               <MoreHorizontal size={18} />
             </button>
           </div>
+
+          {/* Follow-up suggestion chips */}
+          <div className="flex gap-2 mt-4 overflow-x-auto pb-2 scrollbar-hide">
+            {["Показать полный источник", "Искать связанные темы", "Объяснить подробнее"].map((suggestion) => (
+              <button
+                key={suggestion}
+                className="shrink-0 px-4 py-2 rounded-full bg-card border border-border text-[13px] text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

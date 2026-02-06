@@ -8,6 +8,7 @@ interface ChatInputProps {
 
 const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
   const [value, setValue] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
@@ -36,13 +37,15 @@ const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
 
   return (
     <div className="px-4 pb-6 pt-2">
-      <div className="glass-input rounded-[24px]">
+      <div className={`glass-input rounded-[28px] transition-shadow duration-200 ${isFocused ? "glass-input-focused" : ""}`}>
         <textarea
           ref={textareaRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onInput={handleInput}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder="Спросите что угодно..."
           rows={1}
           disabled={disabled}
