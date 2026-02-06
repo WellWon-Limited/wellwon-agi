@@ -145,26 +145,26 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
       </div>
 
       {/* Bottom Nav */}
-      <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center pointer-events-none px-4">
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center pointer-events-none px-6">
         <div className="flex items-center bg-card border border-border rounded-full p-1 pointer-events-auto shadow-2xl">
           <button
             onClick={() => setTab("chats")}
-            className={`px-4 py-2.5 rounded-full text-[13px] font-medium flex items-center gap-2 transition-colors ${
+            className={`px-3.5 py-2.5 rounded-full text-[13px] font-medium flex items-center gap-1.5 transition-colors ${
               tab === "chats" ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <MessageSquare size={16} className={tab === "chats" ? "text-primary" : ""} /> Беседы
+            <MessageSquare size={15} className={tab === "chats" ? "text-primary" : ""} /> Беседы
           </button>
           <button
             onClick={() => setTab("spaces")}
-            className={`px-4 py-2.5 rounded-full text-[13px] font-medium flex items-center gap-2 transition-colors ${
+            className={`px-3.5 py-2.5 rounded-full text-[12px] font-medium flex items-center gap-1.5 transition-colors whitespace-nowrap ${
               tab === "spaces" ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <LayoutGrid size={16} className={tab === "spaces" ? "text-primary" : ""} /> Пространства
+            <LayoutGrid size={15} className={tab === "spaces" ? "text-primary" : ""} /> Пространства
           </button>
         </div>
-        <button className="ml-3 w-11 h-11 bg-secondary rounded-full flex items-center justify-center text-foreground border border-border shadow-lg pointer-events-auto hover:bg-muted transition-colors">
+        <button className="ml-2 w-11 h-11 bg-secondary rounded-full flex items-center justify-center text-foreground border border-border shadow-lg pointer-events-auto hover:bg-muted transition-colors shrink-0">
           <PenSquare size={18} />
         </button>
       </div>
