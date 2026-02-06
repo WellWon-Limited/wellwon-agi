@@ -1,7 +1,16 @@
 const Logo = () => (
-  <div className="flex items-center gap-1 select-none">
-    <span className="text-2xl font-light tracking-tight text-foreground">WellWon</span>
-    <span className="text-2xl font-semibold text-primary border-b-2 border-primary pb-0.5 leading-none">Pro</span>
+  <div className="flex flex-col items-center gap-5">
+    <div className="flex items-center gap-3">
+      <h1 className="font-sans text-[42px] font-bold tracking-tight text-foreground uppercase leading-none">
+        WELLWON
+      </h1>
+      <div className="bg-primary text-primary-foreground text-[15px] font-extrabold px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-[0_0_15px_hsl(350_80%_57%/0.4)] translate-y-[2px]">
+        PRO
+      </div>
+    </div>
+    <p className="text-[17px] text-muted-foreground font-normal tracking-wide opacity-80">
+      Цифровой сотрудник
+    </p>
   </div>
 );
 
