@@ -7,15 +7,38 @@ import ChatResponseView from "@/components/ChatResponseView";
 import SearchProtocolModal from "@/components/SearchProtocolModal";
 import BootScreen from "@/components/BootScreen";
 import TasksView from "@/components/TasksView";
-import KnowledgeBaseView from "@/components/KnowledgeBaseView";
 import NavRail from "@/components/NavRail";
 import MobileChatList from "@/components/MobileChatList";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import DashboardView from "@/components/DashboardView";
+import BrainView from "@/components/BrainView";
+import BriefsView from "@/components/BriefsView";
+import CapsulesView from "@/components/CapsulesView";
+import ExpertsView from "@/components/ExpertsView";
+import ProfileView from "@/components/ProfileView";
 import { useIsMobile } from "@/hooks/use-mobile";
 import avatarImg from "@/assets/avatar.jpg";
-import { Globe, Image, Video, Sparkles, Settings2, PenLine, CheckSquare, Inbox, Database } from "lucide-react";
+import {
+  Globe, Image, Video, Sparkles, Settings2, PenLine,
+  CheckSquare, Package, Users, User, BarChart2, Home,
+  MessageSquare, Brain
+} from "lucide-react";
 
-type View = "home" | "chat" | "tasks" | "base" | "inbox";
+type View =
+  | "home" | "chat" | "tasks" | "brain" | "more"
+  | "briefs" | "capsules" | "experts" | "profile";
+
+// Top bar config for secondary views
+const topBarConfig: Partial<Record<View, { icon: React.ReactNode; title: string }>> = {
+  tasks:   { icon: <CheckSquare size={16} />, title: "ЗАДАЧИ" },
+  brain:   { icon: <Brain size={16} />, title: "BRAIN" },
+  home:    { icon: <Home size={16} />, title: "ГЛАВНАЯ" },
+  briefs:  { icon: <Sparkles size={16} />, title: "БРИФ" },
+  capsules:{ icon: <Package size={16} />, title: "КАПСУЛЫ" },
+  experts: { icon: <Users size={16} />, title: "ЭКСПЕРТЫ" },
+  profile: { icon: <User size={16} />, title: "ПРОФИЛЬ" },
+  more:    { icon: <BarChart2 size={16} />, title: "ЕЩЁ" },
+};
 
 const Index = () => {
   const [booting, setBooting] = useState(true);
@@ -27,7 +50,6 @@ const Index = () => {
   const [currentQuery, setCurrentQuery] = useState("");
   const [currentSession, setCurrentSession] = useState("Стоимость 1кВт");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  // Mobile: track if we're in chat detail (vs list)
   const [mobileChatOpen, setMobileChatOpen] = useState(false);
 
   const isMobile = useIsMobile();
@@ -46,25 +68,32 @@ const Index = () => {
 
   const handleMobileBack = () => {
     setMobileChatOpen(false);
-    setView("home");
+    setView("chat");
   };
 
-  const isChatView = view === "home" || view === "chat";
+  const handleNavigate = (v: string) => {
+    setView(v as View);
+    setMobileChatOpen(false);
+  };
+
+  const isChatView = view === "chat";
+  const isTopBarView = view !== "chat" || !mobileChatOpen;
 
   // ─── MOBILE LAYOUT ──────────────────────────────────────────────
   if (isMobile) {
+    const topBar = topBarConfig[view];
+    const showTopBar = topBar && !(view === "chat" && mobileChatOpen);
+
     return (
       <>
         {booting && <BootScreen onComplete={() => setBooting(false)} />}
 
         <div className="flex flex-col h-[100dvh] bg-background overflow-hidden">
-          {/* Main content area */}
-          <div className="flex-1 min-h-0 overflow-hidden">
+          <div className="flex-1 min-h-0 overflow-hidden relative">
 
-            {/* Glass top bar — shared style for non-chat views */}
-            {(view === "tasks" || view === "inbox" || view === "base") && (
+            {/* Floating glass top bar for secondary views */}
+            {showTopBar && view !== "chat" && (
               <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-2.5 px-3 pt-3 pb-3 pointer-events-none">
-                {/* Left icon button */}
                 <button
                   className="pointer-events-auto w-10 h-10 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
                   style={{
@@ -75,12 +104,9 @@ const Index = () => {
                     boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
                   }}
                 >
-                  {view === "tasks" && <CheckSquare size={16} />}
-                  {view === "inbox" && <Inbox size={16} />}
-                  {view === "base" && <Database size={16} />}
+                  {topBar.icon}
                 </button>
 
-                {/* Title pill */}
                 <div
                   className="flex-1 flex items-center justify-center pointer-events-none"
                   style={{
@@ -94,13 +120,10 @@ const Index = () => {
                   }}
                 >
                   <span className="font-mono text-[13px] font-black tracking-widest uppercase text-foreground">
-                    {view === "tasks" && "ЗАДАЧИ"}
-                    {view === "inbox" && "ИНБОКС"}
-                    {view === "base" && "БАЗА"}
+                    {topBar.title}
                   </span>
                 </div>
 
-                {/* Settings button */}
                 <button
                   onClick={() => setSystemOpen(true)}
                   className="pointer-events-auto w-10 h-10 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
@@ -117,63 +140,116 @@ const Index = () => {
               </div>
             )}
 
-            {/* Tasks view */}
+            {/* ── HOME ── */}
+            {view === "home" && (
+              <div className="h-full overflow-y-auto">
+                <DashboardView onNavigate={handleNavigate} />
+              </div>
+            )}
+
+            {/* ── TASKS ── */}
             {view === "tasks" && (
               <div className="h-full overflow-y-auto relative pt-16">
                 <TasksView />
               </div>
             )}
 
-            {/* Inbox view */}
-            {view === "inbox" && (
-              <div className="h-full flex flex-col relative pt-16">
-                <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-hide">
+            {/* ── BRAIN ── */}
+            {view === "brain" && (
+              <div className="h-full overflow-hidden relative">
+                <BrainView />
+              </div>
+            )}
+
+            {/* ── BRIEFS ── */}
+            {view === "briefs" && (
+              <div className="h-full overflow-hidden relative">
+                <BriefsView onNavigate={handleNavigate} />
+              </div>
+            )}
+
+            {/* ── CAPSULES ── */}
+            {view === "capsules" && (
+              <div className="h-full overflow-hidden relative">
+                <CapsulesView />
+              </div>
+            )}
+
+            {/* ── EXPERTS ── */}
+            {view === "experts" && (
+              <div className="h-full overflow-hidden relative">
+                <ExpertsView />
+              </div>
+            )}
+
+            {/* ── PROFILE ── */}
+            {view === "profile" && (
+              <div className="h-full overflow-hidden relative">
+                <ProfileView />
+              </div>
+            )}
+
+            {/* ── MORE ── */}
+            {view === "more" && (
+              <div className="h-full overflow-y-auto scrollbar-hide">
+                <div className="px-4 pt-20 pb-8 space-y-3">
                   {[
-                    { text: "Нужно подготовить презентацию для инвесторов на следующей неделе", time: "2 мин назад", processed: false },
-                    { text: "Идея: сделать рассылку по базе клиентов с новым оффером", time: "14 мин назад", processed: false },
-                    { text: "Посмотри кейс конкурента — они запустили новый продукт", time: "1 ч назад", processed: true },
-                    { text: "Надо разобраться с подпиской на Notion — скоро истекает", time: "3 ч назад", processed: true },
-                  ].map((item, i) => (
-                    <div key={i} className={`flex items-start gap-3 px-4 py-4 bg-card border rounded-2xl transition-all ${item.processed ? "border-border/40 opacity-50" : "border-primary/20"}`}>
-                      <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.processed ? "bg-muted-foreground/40" : "bg-primary animate-pulse"}`} />
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-[14px] leading-snug mb-1 ${item.processed ? "line-through text-muted-foreground" : "text-foreground"}`}>{item.text}</p>
-                        <span className="font-mono text-[10px] text-muted-foreground/50">{item.time}</span>
+                    {
+                      id: "briefs", icon: <Sparkles size={22} />, label: "Брифы",
+                      desc: "Утренний бриф и вечерний отчёт", color: "text-amber-400",
+                      bg: "rgba(251,191,36,0.10)", border: "rgba(251,191,36,0.20)"
+                    },
+                    {
+                      id: "capsules", icon: <Package size={22} />, label: "Капсулы",
+                      desc: "Форвардные задачи с контекстом", color: "text-blue-400",
+                      bg: "rgba(74,158,255,0.10)", border: "rgba(74,158,255,0.20)"
+                    },
+                    {
+                      id: "experts", icon: <Users size={22} />, label: "Эксперты",
+                      desc: "Каталог агентов и фоновые процессы", color: "text-violet-400",
+                      bg: "rgba(183,124,255,0.10)", border: "rgba(183,124,255,0.20)"
+                    },
+                    {
+                      id: "profile", icon: <User size={22} />, label: "Профиль",
+                      desc: "9 доменов, черты личности, тренды", color: "text-primary",
+                      bg: "rgba(234,56,87,0.10)", border: "rgba(234,56,87,0.20)"
+                    },
+                    {
+                      id: "settings", icon: <Settings2 size={22} />, label: "Настройки",
+                      desc: "Системные параметры JARVIS", color: "text-muted-foreground/60",
+                      bg: "rgba(255,255,255,0.05)", border: "rgba(255,255,255,0.09)"
+                    },
+                  ].map(item => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        if (item.id === "settings") setSystemOpen(true);
+                        else handleNavigate(item.id);
+                      }}
+                      className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-left hover:opacity-80 transition-all active:scale-[0.99]"
+                      style={{ background: item.bg, border: `1px solid ${item.border}` }}
+                    >
+                      <div className={`${item.color} shrink-0`}>{item.icon}</div>
+                      <div className="flex-1">
+                        <div className={`font-mono text-[14px] font-bold ${item.color} mb-0.5`}>{item.label}</div>
+                        <div className="font-mono text-[11px] text-muted-foreground/50">{item.desc}</div>
                       </div>
-                    </div>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground/25 shrink-0">
+                        <path d="M9 18l6-6-6-6"/>
+                      </svg>
+                    </button>
                   ))}
                 </div>
-                <div className="shrink-0 px-4 pb-4 pt-2 border-t border-white/5">
-                  <div className="glass-input rounded-2xl px-4 py-3 flex items-center gap-3">
-                    <input
-                      type="text"
-                      placeholder="Набросай идею или задачу..."
-                      className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground text-[14px] font-mono"
-                    />
-                    <button className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground hover:opacity-90 transition-opacity shrink-0">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                    </button>
-                  </div>
-                </div>
               </div>
             )}
 
-            {/* Base view */}
-            {view === "base" && (
-              <div className="h-full overflow-y-auto relative">
-                <KnowledgeBaseView />
-              </div>
-            )}
-
-            {/* Chat section */}
-            {(view === "home" || view === "chat") && (
+            {/* ── CHAT ── */}
+            {view === "chat" && (
               <>
-                {/* Chat detail view */}
                 {mobileChatOpen ? (
                   <div className="h-full flex flex-col relative">
-                    {/* Glass floating top bar */}
+                    {/* Chat top bar */}
                     <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-2.5 px-3 pt-3 pb-3">
-                      {/* Back button — round glass */}
                       <button
                         onClick={handleMobileBack}
                         style={{
@@ -190,9 +266,8 @@ const Index = () => {
                         </svg>
                       </button>
 
-                      {/* Mode pill — glass pill with icon buttons */}
                       <div
-                        className="flex-1 flex items-center"
+                        className="flex-1 flex items-center overflow-x-auto scrollbar-hide"
                         style={{
                           background: "rgba(255,255,255,0.06)",
                           backdropFilter: "blur(20px)",
@@ -213,7 +288,7 @@ const Index = () => {
                             key={i}
                             onClick={() => setActiveMode(i)}
                             title={item.label}
-                            className="flex-1 h-9 rounded-full flex items-center justify-center transition-all"
+                            className="flex-1 h-9 rounded-full flex items-center justify-center transition-all shrink-0"
                             style={activeMode === i ? {
                               background: "rgba(255,255,255,0.12)",
                               color: "hsl(var(--primary))",
@@ -226,7 +301,6 @@ const Index = () => {
                         ))}
                       </div>
 
-                      {/* Settings button — round glass */}
                       <button
                         onClick={() => setSystemOpen(true)}
                         style={{
@@ -242,7 +316,6 @@ const Index = () => {
                       </button>
                     </div>
 
-                    {/* Chat content — padding top for floating bar */}
                     <div className="flex-1 min-h-0">
                       <ChatResponseView
                         userQuery={currentQuery}
@@ -250,9 +323,8 @@ const Index = () => {
                       />
                     </div>
 
-                    {/* Floating new chat button */}
                     <button
-                      onClick={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
+                      onClick={() => { setMobileChatOpen(false); }}
                       style={{
                         background: "rgba(255,255,255,0.13)",
                         backdropFilter: "blur(24px)",
@@ -260,24 +332,22 @@ const Index = () => {
                         border: "1px solid rgba(255,255,255,0.18)",
                         boxShadow: "0 8px 32px rgba(0,0,0,0.5)"
                       }}
-                      className="absolute bottom-4 right-4 w-16 h-16 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-all hover:scale-105 z-10"
+                      className="absolute bottom-4 right-4 w-14 h-14 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-all hover:scale-105 z-10"
                     >
-                      <PenLine size={22} />
+                      <PenLine size={20} />
                     </button>
                   </div>
                 ) : (
-                  /* Mobile chat list + FAB for new chat */
                   <div className="h-full relative">
                     <MobileChatList
                       currentSession={currentSession}
                       onSelectSession={handleSelectSession}
                       onOpenSettings={() => setSystemOpen(true)}
-                      onNewChat={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
+                      onNewChat={() => { setMobileChatOpen(true); setCurrentQuery(""); }}
                       onSend={handleSend}
                     />
-                    {/* FAB — new chat, полупрозрачный */}
                     <button
-                      onClick={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
+                      onClick={() => { setMobileChatOpen(true); setCurrentQuery(""); }}
                       style={{
                         background: "rgba(255,255,255,0.06)",
                         backdropFilter: "blur(20px)",
@@ -298,10 +368,7 @@ const Index = () => {
           {/* Bottom navigation */}
           <MobileBottomNav
             activeView={view}
-            onNavigate={(v) => {
-              setView(v as View);
-              setMobileChatOpen(false);
-            }}
+            onNavigate={handleNavigate}
           />
         </div>
 
@@ -322,7 +389,6 @@ const Index = () => {
       {booting && <BootScreen onComplete={() => setBooting(false)} />}
 
       <div className="flex h-[100dvh] bg-background overflow-hidden">
-        {/* Left icon nav rail */}
         <NavRail
           activeView={view}
           onNavigate={(v) => setView(v as View)}
@@ -330,7 +396,6 @@ const Index = () => {
           avatarSrc={avatarImg}
         />
 
-        {/* Chat session sidebar — only visible in chat mode */}
         {isChatView && sidebarOpen && (
           <Sidebar
             onOpenSettings={() => setSystemOpen(true)}
@@ -345,9 +410,7 @@ const Index = () => {
           />
         )}
 
-        {/* Main area */}
         <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
-          {/* Top bar */}
           <header className="shrink-0 flex items-center justify-between px-4 md:px-6 pt-4 pb-3">
             {isChatView && !sidebarOpen && (
               <button
@@ -370,23 +433,10 @@ const Index = () => {
             </div>
           </header>
 
-          {/* Content */}
           <div className="flex-1 min-h-0 flex flex-col items-center w-full">
             {view === "tasks" ? (
               <div className="flex-1 min-h-0 w-full max-w-[960px]">
                 <TasksView />
-              </div>
-            ) : view === "base" ? (
-              <div className="flex-1 min-h-0 w-full max-w-[960px] flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
-                      <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                    </svg>
-                  </div>
-                  <div className="font-mono text-[11px] tracking-widest uppercase text-muted-foreground/60 mb-2">База знаний</div>
-                  <p className="text-muted-foreground text-sm">Скоро здесь появится второй мозг JARVIS</p>
-                </div>
               </div>
             ) : view === "home" ? (
               <div className="flex flex-col flex-1 min-h-0 w-full max-w-[900px] px-4 md:px-6">
