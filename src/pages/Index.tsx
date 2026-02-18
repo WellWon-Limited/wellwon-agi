@@ -273,14 +273,30 @@ const Index = () => {
                     </button>
                   </div>
                 ) : (
-                  /* Mobile chat list */
-                  <MobileChatList
-                    currentSession={currentSession}
-                    onSelectSession={handleSelectSession}
-                    onOpenSettings={() => setSystemOpen(true)}
-                    onNewChat={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
-                    onSend={handleSend}
-                  />
+                  /* Mobile chat list + FAB for new chat */
+                  <div className="h-full relative">
+                    <MobileChatList
+                      currentSession={currentSession}
+                      onSelectSession={handleSelectSession}
+                      onOpenSettings={() => setSystemOpen(true)}
+                      onNewChat={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
+                      onSend={handleSend}
+                    />
+                    {/* FAB — new chat */}
+                    <button
+                      onClick={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
+                      style={{
+                        background: "rgba(255,255,255,0.13)",
+                        backdropFilter: "blur(24px)",
+                        WebkitBackdropFilter: "blur(24px)",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        boxShadow: "0 8px 32px rgba(0,0,0,0.5)"
+                      }}
+                      className="absolute bottom-4 right-4 w-16 h-16 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-all hover:scale-105 z-10"
+                    >
+                      <PenLine size={22} />
+                    </button>
+                  </div>
                 )}
               </>
             )}
