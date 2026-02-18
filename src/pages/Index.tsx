@@ -34,6 +34,8 @@ const Index = () => {
         <Sidebar
           onOpenSettings={() => setSystemOpen(true)}
           currentSession={currentSession}
+          activeView={view}
+          onNavigate={(v) => setView(v as View)}
           onSelectSession={(title) => {
             setCurrentSession(title);
             setView("chat");
