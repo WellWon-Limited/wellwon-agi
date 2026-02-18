@@ -142,7 +142,7 @@ const Index = () => {
                     </div>
                   ))}
                 </div>
-                <div className="shrink-0 px-4 pb-4 pt-2 border-t border-border/40">
+                <div className="shrink-0 px-4 pb-4 pt-2 border-t border-white/5">
                   <div className="glass-input rounded-2xl px-4 py-3 flex items-center gap-3">
                     <input
                       type="text"

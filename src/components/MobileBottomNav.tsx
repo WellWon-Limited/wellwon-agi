@@ -17,7 +17,7 @@ const MobileBottomNav = ({ activeView, onNavigate }: MobileBottomNavProps) => {
     id === "home" ? activeView === "home" || activeView === "chat" : activeView === id;
 
   return (
-    <div className="shrink-0 flex items-center bg-[hsl(240,10%,5%)] border-t border-border pb-safe">
+    <div className="shrink-0 flex items-center bg-[hsl(240,10%,5%)] border-t border-white/5 pb-safe">
       {navItems.map(({ id, icon: Icon, label }) => (
         <button
           key={id}

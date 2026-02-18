@@ -211,7 +211,7 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
       </div>
 
       {/* Fixed bottom input — прибит к низу */}
-      <div className="shrink-0 px-4 pb-4 pt-2 border-t border-border/30">
+      <div className="shrink-0 px-4 pb-4 pt-2 border-t border-white/5">
         <div className="flex items-center gap-2">
           <button className="w-9 h-9 rounded-xl bg-card border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0">
             <Plus size={17} />

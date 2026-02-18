@@ -185,7 +185,7 @@ const TaskCard = ({ task, onClick, compact }: { task: Task; onClick: () => void;
       </div>
 
       {task.subtasks && (
-        <div className="mt-3 pt-2.5 border-t border-border">
+        <div className="mt-3 pt-2.5 border-t border-white/5">
           <div className="flex items-center justify-between mb-1.5">
             <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground">Подзадачи</span>
             <span className="font-mono text-[10px] text-muted-foreground">
@@ -258,9 +258,9 @@ const TaskDetail = ({ task, onClose }: { task: Task; onClose: () => void }) => {
       <div className="fixed inset-0 bg-background/60 md:hidden -z-10" onClick={onClose} />
 
       {/* Panel */}
-      <div className="flex flex-col h-full bg-[hsl(240,10%,6%)] md:border-l border-border w-full md:w-[360px] ml-auto overflow-hidden">
+      <div className="flex flex-col h-full bg-[hsl(240,10%,6%)] md:border-l border-white/5 w-full md:w-[360px] ml-auto overflow-hidden">
         {/* Header */}
-        <div className="px-5 pt-5 pb-4 border-b border-border shrink-0">
+        <div className="px-5 pt-5 pb-4 border-b border-white/5 shrink-0">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <span className={`${sta.bg} rounded-lg p-1.5`}>{sta.icon}</span>
@@ -275,7 +275,7 @@ const TaskDetail = ({ task, onClose }: { task: Task; onClose: () => void }) => {
         </div>
 
         {/* Meta */}
-        <div className="px-5 py-4 border-b border-border shrink-0 space-y-3">
+        <div className="px-5 py-4 border-b border-white/5 shrink-0 space-y-3">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground/60">Приоритет</span>
             <span className={`flex items-center gap-1.5 font-mono text-[11px] font-bold ${pri.color}`}>
@@ -312,7 +312,7 @@ const TaskDetail = ({ task, onClose }: { task: Task; onClose: () => void }) => {
 
         {/* Subtasks */}
         {task.subtasks && (
-          <div className="px-5 py-4 border-b border-border shrink-0">
+          <div className="px-5 py-4 border-b border-white/5 shrink-0">
             <div className="flex items-center gap-2 mb-3">
               <CheckSquare size={13} className="text-primary" />
               <span className="font-mono text-[11px] tracking-widest uppercase text-muted-foreground font-bold">
@@ -362,7 +362,7 @@ const TaskDetail = ({ task, onClose }: { task: Task; onClose: () => void }) => {
         </div>
 
         {/* Accept / Reject actions */}
-        <div className="px-5 pb-6 pt-3 border-t border-border flex gap-2.5 shrink-0">
+        <div className="px-5 pb-6 pt-3 border-t border-white/5 flex gap-2.5 shrink-0">
           <button className="flex-1 py-3 rounded-2xl bg-primary text-primary-foreground font-mono text-[12px] tracking-widest uppercase font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
             <Check size={14} />
             Принять

@@ -30,7 +30,7 @@ const Row = ({
   value?: string;
   right?: React.ReactNode;
 }) => (
-  <button className="w-full flex items-center justify-between py-4 border-b border-border group">
+  <button className="w-full flex items-center justify-between py-4 border-b border-white/5 group">
     <div className="flex items-center gap-3">
       <Icon size={18} className="text-primary" />
       <span className="text-[15px] text-foreground">{label}</span>
@@ -46,9 +46,9 @@ const Row = ({
 
 const SystemPanel = ({ onClose }: SystemPanelProps) => {
   return (
-    <div className="w-[320px] h-full bg-[hsl(240,10%,6%)] border-l border-border flex flex-col view-slide-in shrink-0">
+    <div className="w-[320px] h-full bg-[hsl(240,10%,6%)] border-l border-white/5 flex flex-col view-slide-in shrink-0">
       {/* Header */}
-      <div className="px-5 pt-6 pb-4 flex items-center gap-3 border-b border-border">
+      <div className="px-5 pt-6 pb-4 flex items-center gap-3 border-b border-white/5">
         <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
           <ArrowRight size={20} />
         </button>
@@ -92,7 +92,7 @@ const SystemPanel = ({ onClose }: SystemPanelProps) => {
       </div>
 
       {/* Disconnect */}
-      <div className="px-4 pb-6 pt-2 border-t border-border">
+      <div className="px-4 pb-6 pt-2 border-t border-white/5">
         <button className="w-full flex items-center gap-3 py-3 text-primary hover:text-primary/80 transition-colors">
           <Power size={18} />
           <span className="font-mono text-[13px] font-bold tracking-widest uppercase">

@@ -62,7 +62,7 @@ const BootScreen = ({ onComplete }: BootScreenProps) => {
             BOOT SEQUENCE
           </span>
         </div>
-        <div className="border-t border-border mb-4" />
+        <div className="border-t border-white/5 mb-4" />
 
         <div className="space-y-1.5 min-h-[120px]">
           {bootLines.slice(0, visibleLines).map((line, i) => (
