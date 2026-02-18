@@ -56,7 +56,11 @@ const Index = () => {
 
           {/* Content — centered with max-width */}
           <div className="flex-1 min-h-0 flex flex-col items-center w-full">
-            {view === "home" ? (
+            {view === "tasks" ? (
+              <div className="flex-1 min-h-0 w-full max-w-[900px]">
+                <TasksView />
+              </div>
+            ) : view === "home" ? (
               <div className="flex flex-col flex-1 min-h-0 w-full max-w-[900px] px-6">
                 {/* Center logo */}
                 <div className="flex-1 flex items-center justify-center">
