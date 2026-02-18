@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Layers, Search, MessageSquare, Database, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Layers, Search, MessageSquare, Database, PanelLeftClose, PanelLeftOpen, CheckSquare } from "lucide-react";
 
 const activeSession = {
   title: "Стоимость 1кВт",
@@ -15,9 +15,11 @@ interface SidebarProps {
   onOpenSettings: () => void;
   currentSession: string;
   onSelectSession: (title: string) => void;
+  activeView?: string;
+  onNavigate?: (view: string) => void;
 }
 
-const Sidebar = ({ onOpenSettings, currentSession, onSelectSession }: SidebarProps) => {
+const Sidebar = ({ onOpenSettings, currentSession, onSelectSession, activeView, onNavigate }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -141,18 +143,28 @@ const Sidebar = ({ onOpenSettings, currentSession, onSelectSession }: SidebarPro
       </div>
 
       {/* Bottom tabs */}
-      <div className={`pb-4 pt-2 border-t border-border flex ${collapsed ? "flex-col items-center gap-2 px-1.5" : "gap-2 px-3"}`}>
+      <div className={`pb-4 pt-2 border-t border-border flex ${collapsed ? "flex-col items-center gap-2 px-1.5" : "flex-col gap-1.5 px-3"}`}>
         <button
-          className={`flex items-center justify-center gap-2 rounded-lg bg-secondary text-foreground font-mono tracking-wider uppercase transition-colors ${
-            collapsed ? "w-9 h-9" : "flex-1 py-2.5 text-[12px]"
-          }`}
+          onClick={() => onNavigate?.("home")}
+          className={`flex items-center justify-center gap-2 rounded-lg font-mono tracking-wider uppercase transition-colors ${
+            collapsed ? "w-9 h-9" : "py-2.5 text-[12px] w-full"
+          } ${activeView === "home" || activeView === "chat" ? "bg-secondary text-foreground" : "hover:bg-secondary text-muted-foreground hover:text-foreground"}`}
         >
           <MessageSquare size={14} />
-          {!collapsed && "Поток"}
+          {!collapsed && "Чат"}
+        </button>
+        <button
+          onClick={() => onNavigate?.("tasks")}
+          className={`flex items-center justify-center gap-2 rounded-lg font-mono tracking-wider uppercase transition-colors ${
+            collapsed ? "w-9 h-9" : "py-2.5 text-[12px] w-full"
+          } ${activeView === "tasks" ? "bg-primary text-primary-foreground" : "hover:bg-secondary text-muted-foreground hover:text-foreground"}`}
+        >
+          <CheckSquare size={14} />
+          {!collapsed && "Задачи"}
         </button>
         <button
           className={`flex items-center justify-center gap-2 rounded-lg hover:bg-secondary text-muted-foreground font-mono tracking-wider uppercase transition-colors ${
-            collapsed ? "w-9 h-9" : "flex-1 py-2.5 text-[12px]"
+            collapsed ? "w-9 h-9" : "py-2.5 text-[12px] w-full"
           }`}
         >
           <Database size={14} />

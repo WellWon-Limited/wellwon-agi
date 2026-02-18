@@ -6,9 +6,10 @@ import SystemPanel from "@/components/SystemPanel";
 import ChatResponseView from "@/components/ChatResponseView";
 import SearchProtocolModal from "@/components/SearchProtocolModal";
 import BootScreen from "@/components/BootScreen";
+import TasksView from "@/components/TasksView";
 import avatarImg from "@/assets/avatar.jpg";
 
-type View = "home" | "chat";
+type View = "home" | "chat" | "tasks";
 
 const Index = () => {
   const [booting, setBooting] = useState(true);
@@ -33,6 +34,8 @@ const Index = () => {
         <Sidebar
           onOpenSettings={() => setSystemOpen(true)}
           currentSession={currentSession}
+          activeView={view}
+          onNavigate={(v) => setView(v as View)}
           onSelectSession={(title) => {
             setCurrentSession(title);
             setView("chat");
@@ -53,7 +56,11 @@ const Index = () => {
 
           {/* Content — centered with max-width */}
           <div className="flex-1 min-h-0 flex flex-col items-center w-full">
-            {view === "home" ? (
+            {view === "tasks" ? (
+              <div className="flex-1 min-h-0 w-full max-w-[900px]">
+                <TasksView />
+              </div>
+            ) : view === "home" ? (
               <div className="flex flex-col flex-1 min-h-0 w-full max-w-[900px] px-6">
                 {/* Center logo */}
                 <div className="flex-1 flex items-center justify-center">
