@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, SlidersHorizontal, ThumbsUp, ThumbsDown, Share } from "lucide-react";
+import { ArrowLeft, Search, SlidersHorizontal, ThumbsUp, ThumbsDown, Share, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 interface DiscoverViewProps {
@@ -73,7 +73,7 @@ const DiscoverView = ({ onBack }: DiscoverViewProps) => {
                   {article.title}
                 </h3>
                 <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-muted-foreground">✦ {article.source}</span>
+                  <span className="text-[13px] text-muted-foreground flex items-center gap-1"><Sparkles size={11} className="inline" />{article.source}</span>
                   <div className="flex items-center gap-3 text-muted-foreground">
                     <button className="hover:text-foreground"><ThumbsUp size={16} /></button>
                     <button className="hover:text-foreground"><ThumbsDown size={16} /></button>

@@ -166,7 +166,7 @@ const BrainView = () => {
                           style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
                           onClick={() => setInboxItems(prev => prev.map(i => i.id === item.id ? { ...i, processed: true } : i))}
                         >
-                          ✓ Готово
+                          <Check size={10} className="inline mr-0.5" /> Готово
                         </button>
                       </div>
                     )}
