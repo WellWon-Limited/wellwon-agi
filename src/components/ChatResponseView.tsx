@@ -132,7 +132,7 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
       </div>
 
       {/* Fixed bottom input */}
-      <div className="shrink-0 px-4 pb-4 pt-2 border-t border-border/40">
+      <div className="shrink-0 px-4 pb-4 pt-2">
         <div className="font-mono text-[10px] tracking-widest text-primary/60 mb-2 uppercase">
           System Ready // Awaiting Input
         </div>
