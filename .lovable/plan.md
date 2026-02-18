@@ -1,90 +1,77 @@
 
+## Задача: унифицировать стиль верхних панелей и улучшить FAB-кнопку
 
-# Plan: Logo fix + UX document integration + UI polish
+### Что нужно сделать
 
-## 1. Logo: WELLWON uppercase, compact, with rectangular PRO badge
+1. **Стиль верхних панелей** — привести все хедеры (в MobileChatList, TasksView, Inbox, Base) к единому стилю "стеклянной" floating-панели, такой же как в активном чате (back + mode pill + settings)
+2. **FAB-кнопка** — сделать больше, опустить ниже, добавить эффект полупрозрачности
 
-**File:** `src/components/Logo.tsx`
+---
 
-Based on the reference image (image-2.png), the logo needs:
-- "WELLWON" in uppercase, **bold/heavy weight** (`font-extrabold` or `font-black`), keeping compact size
-- The text should use `text-[32px]` (slightly smaller, "grounded/flat" look as requested)
-- "PRO" badge must be **rectangular with slight rounding** (`rounded-lg`, NOT `rounded-md` or `rounded-full`) -- currently it has `rounded-md` which is too circular per user complaint
-- PRO badge should be **solid red background** (`bg-primary`) with white text, not the current semi-transparent style
-- PRO badge height should visually match the text height (vertically centered, same line)
-- Font: keep Inter but go heavier weight
+### Текущее состояние (что не так)
 
-```
-WELLWON [PRO]        <-- PRO is a small filled red rectangle
-Цифровой сотрудник   <-- subtitle below, muted
-```
+- **MobileChatList** (список бесед): обычные кнопки с `bg-card border border-border/40` — выглядят "плоско"
+- **TasksView**: свой хедер, совсем другой стиль
+- **Inbox/Base**: вовсе без оформленных кнопок вверху
+- **FAB**: `w-12 h-12`, позиция `bottom-[72px]` — маловат и высоко
 
-## 2. Header layout remains: history (left), avatar (right)
+---
 
-Per the memory note `ux/layout-header`, the history icon is on the left, avatar on the right -- this is already correct in the current `Index.tsx`. No changes needed.
+### Решение
 
-## 3. Integrate key patterns from UX document
+#### 1. `src/components/MobileChatList.tsx` — унифицировать Top Bar
 
-The uploaded `11-mobile-web-app-ux.md` is a comprehensive design spec for a "Venom" app. We adapt relevant patterns to WellWon's design (dark theme with red accent). Key additions:
+Применить тот же glass-стиль к кнопкам настроек и нового чата:
 
-### 3a. ChatInput improvements
+```text
+СЕЙЧАС:
+  bg-card border border-border/40 → обычный серый прямоугольник
 
-**File:** `src/components/ChatInput.tsx`
-
-- Increase bottom rounding further to `rounded-[28px]` for a more premium pill-card feel
-- Keep the glass-input effect
-- Add a subtle animation: when the textarea is focused, the border glow intensifies slightly (red glow increases)
-- Add a focused CSS variant `.glass-input-focused` with stronger red glow
-
-### 3b. ChatResponseView -- full Perplexity-style response
-
-**File:** `src/components/ChatResponseView.tsx`
-
-Based on the UX doc patterns and the reference screenshots, enhance:
-- **Sources section**: Add horizontal scrollable source cards at top of response (already partially done, but ensure numbered badges with favicons)
-- **Follow-up suggestions**: Add pill-shaped suggestion chips below the answer (e.g., "Показать полный источник", "Искать связанные темы")
-- **Action buttons row**: Keep Share, Regenerate, Copy, More -- already present
-- **Follow-up input**: Keep the glass pill input at bottom -- already present
-
-### 3c. Bottom navigation pattern from UX doc
-
-The UX doc recommends a 4-5 tab bottom navigation. Currently WellWon uses header-based navigation (history icon left, avatar right) which works well for a simpler app. We keep the current approach but ensure the Library view's internal bottom nav (Conversations/Spaces) follows the pill-style pattern properly with enough spacing.
-
-**File:** `src/components/LibraryView.tsx`
-
-- Ensure bottom nav buttons have proper spacing and don't overlap the "New chat" button
-- Reduce font size of "Пространства" if it overflows
-
-## 4. CSS additions
-
-**File:** `src/index.css`
-
-Add focused glass variant:
-```css
-.glass-input-focused {
-  border: 1px solid rgba(234, 56, 87, 0.25);
-  box-shadow: 
-    0 0 0 1px rgba(234,56,87,0.1) inset,
-    0 8px 32px rgba(0,0,0,0.4),
-    0 0 30px rgba(234,56,87,0.12);
-}
+СТАНЕТ:
+  background: rgba(255,255,255,0.08)
+  backdropFilter: blur(20px)
+  border: 1px solid rgba(255,255,255,0.10)
+  boxShadow: 0 4px 16px rgba(0,0,0,0.3)
+  borderRadius: 50%  (круглые, как back/settings в чате)
 ```
 
-## Summary of all changes
+Логотип JARVIS по центру остаётся как есть.
 
-| File | Changes |
-|------|---------|
-| `Logo.tsx` | WELLWON uppercase + heavier font weight + PRO badge: solid red rectangle with `rounded-lg`, not circular |
-| `index.css` | Add `.glass-input-focused` variant with stronger red glow |
-| `ChatInput.tsx` | Increase rounding to `rounded-[28px]`, add focus state class toggle |
-| `ChatResponseView.tsx` | Add follow-up suggestion chips below the answer |
-| `LibraryView.tsx` | Fix bottom nav spacing to prevent overlap |
+#### 2. `src/pages/Index.tsx` — хедеры для Inbox, Base, Tasks
 
-## Technical details
+Для каждого из этих view добавить floating glass top bar аналогичный чату, но упрощённый:
+- Левая кнопка: иконка соответствующего раздела (или просто логотип/sparkles)
+- Центр: заголовок раздела (JARVIS / ЗАДАЧИ / ИНБОКС / БАЗА)
+- Правая кнопка: Settings2 (открыть системную панель)
 
-- No new dependencies
-- Logo font weight changes from `font-semibold` to `font-extrabold` for the heavy look in the reference
-- PRO badge changes from `bg-primary/20 text-primary border border-primary/30 rounded-md` to `bg-primary text-white rounded-lg` (solid filled rectangle)
-- PRO badge uses `text-[11px]` with `px-2.5 py-1` for proper rectangular proportions matching WELLWON height
-- Follow-up suggestion chips: horizontal scroll of `rounded-full bg-card border border-border` pills
+Все три кнопки в едином glass-стиле.
 
+#### 3. `src/pages/Index.tsx` — улучшить FAB
+
+```text
+СЕЙЧАС:
+  w-12 h-12
+  bottom-[72px] right-4
+  background: rgba(255,255,255,0.10)
+
+СТАНЕТ:
+  w-16 h-16  (больше)
+  bottom-4 right-4  (ниже, прямо над навигацией)
+  background: rgba(255,255,255,0.13)
+  border: 1px solid rgba(255,255,255,0.18)
+  boxShadow: 0 8px 32px rgba(0,0,0,0.5)
+  иконка PenLine увеличить до size={22}
+```
+
+---
+
+### Технические изменения по файлам
+
+**`src/components/MobileChatList.tsx`**
+- Кнопки в top bar (шестерёнка + карандаш): заменить `bg-card border border-border/40` на inline style с glass-эффектом, скруглить до `borderRadius: "50%"`
+
+**`src/pages/Index.tsx`**
+- Для `view === "tasks"`: добавить glass top bar с `CheckSquare` иконкой слева, "ЗАДАЧИ" по центру, `Settings2` справа
+- Для `view === "inbox"`: убрать нынешний простой `border-b` хедер, заменить на glass top bar с `Inbox` иконкой слева, "ИНБОКС" по центру, `Settings2` справа
+- Для `view === "base"`: добавить glass top bar с `Database` иконкой слева, "БАЗА" по центру, `Settings2` справа
+- FAB кнопка: увеличить размер до `w-16 h-16`, изменить позицию на `bottom-4`, усилить blur/shadow/opacity
