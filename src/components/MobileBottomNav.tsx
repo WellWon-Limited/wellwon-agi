@@ -1,4 +1,4 @@
-import { MessageSquare, CheckSquare, Database, Inbox } from "lucide-react";
+import { Home, MessageSquare, Brain, CheckSquare, MoreHorizontal } from "lucide-react";
 
 interface MobileBottomNavProps {
   activeView: string;
@@ -6,15 +6,19 @@ interface MobileBottomNavProps {
 }
 
 const navItems = [
-  { id: "home", icon: MessageSquare, label: "Беседы" },
+  { id: "home", icon: Home, label: "Главная" },
+  { id: "chat", icon: MessageSquare, label: "Беседы" },
+  { id: "brain", icon: Brain, label: "Brain" },
   { id: "tasks", icon: CheckSquare, label: "Задачи" },
-  { id: "inbox", icon: Inbox, label: "Инбокс" },
-  { id: "base", icon: Database, label: "База" },
+  { id: "more", icon: MoreHorizontal, label: "Ещё" },
 ];
 
 const MobileBottomNav = ({ activeView, onNavigate }: MobileBottomNavProps) => {
-  const isActive = (id: string) =>
-    id === "home" ? activeView === "home" || activeView === "chat" : activeView === id;
+  const isActive = (id: string) => {
+    if (id === "chat") return activeView === "chat";
+    if (id === "more") return ["more", "briefs", "capsules", "experts", "profile"].includes(activeView);
+    return activeView === id;
+  };
 
   return (
     <div className="shrink-0 flex items-center bg-[hsl(240,10%,5%)] border-t border-white/5 pb-safe">
