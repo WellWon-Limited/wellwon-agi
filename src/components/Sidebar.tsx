@@ -19,7 +19,7 @@ interface SidebarProps {
   onNavigate?: (view: string) => void;
 }
 
-const Sidebar = ({ onOpenSettings, currentSession, onSelectSession }: SidebarProps) => {
+const Sidebar = ({ onOpenSettings, currentSession, onSelectSession, activeView, onNavigate }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
