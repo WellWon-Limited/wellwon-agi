@@ -422,24 +422,39 @@ const TasksView = () => {
           {tasks.filter(t => t.status === "active").length} активных · {agents.filter(a => a.status !== "idle").length} агентов в работе
         </div>
 
-        {/* Tabs */}
-        <div className="flex items-center gap-1 bg-card border border-border/40 rounded-xl p-1">
+        {/* Tabs — pill toggle without outer border */}
+        <div
+          className="flex items-center p-1 self-start"
+          style={{
+            background: "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            borderRadius: "100px",
+          }}
+        >
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-mono text-[11px] tracking-widest uppercase transition-all flex-1 justify-center ${
-                activeTab === tab.id
-                  ? "bg-primary text-primary-foreground font-bold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-              }`}
+              className="flex items-center gap-1.5 px-4 py-2 font-mono text-[11px] tracking-widest uppercase transition-all rounded-full"
+              style={activeTab === tab.id ? {
+                background: "hsl(var(--primary))",
+                color: "hsl(var(--primary-foreground))",
+                fontWeight: 700,
+              } : {
+                color: "rgba(255,255,255,0.4)",
+              }}
             >
               {tab.icon}
-              <span className="truncate">{tab.label}</span>
+              <span>{tab.label}</span>
               {tab.count !== undefined && tab.count > 0 && (
-                <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded min-w-[16px] text-center shrink-0 ${
-                  activeTab === tab.id ? "bg-white/20 text-white" : "bg-secondary text-muted-foreground"
-                }`}>
+                <span
+                  className="font-mono text-[9px] px-1.5 py-0.5 rounded-full min-w-[18px] text-center shrink-0"
+                  style={activeTab === tab.id
+                    ? { background: "rgba(255,255,255,0.25)", color: "#fff" }
+                    : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }
+                  }
+                >
                   {tab.count}
                 </span>
               )}
