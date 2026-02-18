@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, MoreHorizontal, Clock, Pencil } from "lucide-react";
+import { Search, MoreHorizontal, Clock } from "lucide-react";
 
 const allSessions = [
   {
@@ -69,8 +69,9 @@ const MobileChatList = ({
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Top bar — шестерёнка слева, JARVIS по центру, карандаш справа */}
-      <div className="shrink-0 flex items-center gap-3 px-4 pt-4 pb-3">
+      {/* Top bar — настройки слева, поиск справа */}
+      <div className="shrink-0 flex items-center gap-2.5 px-3 pt-3 pb-3">
+        {/* Settings button — glass round */}
         <button
           onClick={onOpenSettings}
           style={{
@@ -89,39 +90,30 @@ const MobileChatList = ({
           </svg>
         </button>
 
-        <h1 className="flex-1 text-center font-mono text-[15px] font-black tracking-widest uppercase text-foreground">
-          JARVIS
-        </h1>
-
-        <button
-          onClick={onNewChat}
+        {/* Search bar — glass pill */}
+        <div
+          className="flex-1 flex items-center gap-2 px-4 py-0"
           style={{
-            background: "rgba(255,255,255,0.08)",
+            background: "rgba(255,255,255,0.06)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-            borderRadius: "50%",
+            border: "1px solid rgba(255,255,255,0.09)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
+            borderRadius: "100px",
+            height: "40px",
           }}
-          className="w-10 h-10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
         >
-          <Pencil size={15} />
-        </button>
-      </div>
-
-      {/* Search bar */}
-      <div className="shrink-0 px-4 pb-3">
-        <div className="flex items-center gap-2 bg-card rounded-xl px-4 py-2.5" style={{border: "1px solid rgba(255,255,255,0.05)"}}>
-          <Search size={14} className="text-muted-foreground/40 shrink-0" />
+          <Search size={14} className="text-foreground/30 shrink-0" />
           <input
             type="text"
             placeholder="Поиск бесед"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-transparent outline-none text-[14px] text-foreground placeholder:text-muted-foreground/40"
+            className="flex-1 bg-transparent outline-none text-[14px] text-foreground placeholder:text-foreground/30 font-mono"
           />
         </div>
       </div>
+
 
       {/* Chat list */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
