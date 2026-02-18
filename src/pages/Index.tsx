@@ -40,31 +40,28 @@ const Index = () => {
         />
 
         {/* Main area */}
-        <div className="flex-1 flex flex-col min-w-0 relative">
+        <div className="flex-1 flex flex-col min-w-0 relative overflow-hidden">
           {/* Top bar */}
-          <header className="shrink-0 flex items-center justify-between px-6 pt-5 pb-3">
-            <div />
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setSystemOpen(!systemOpen)}
-                className="w-9 h-9 rounded-full overflow-hidden border border-border hover:border-primary/30 transition-colors"
-              >
-                <img src={avatarImg} alt="Avatar" className="w-full h-full object-cover" />
-              </button>
-            </div>
+          <header className="shrink-0 flex items-center justify-end px-6 pt-5 pb-3">
+            <button
+              onClick={() => setSystemOpen(!systemOpen)}
+              className="w-9 h-9 rounded-full overflow-hidden border border-border hover:border-primary/30 transition-colors"
+            >
+              <img src={avatarImg} alt="Avatar" className="w-full h-full object-cover" />
+            </button>
           </header>
 
-          {/* Content */}
-          <div className="flex-1 min-h-0 flex flex-col">
+          {/* Content — centered with max-width */}
+          <div className="flex-1 min-h-0 flex flex-col items-center w-full">
             {view === "home" ? (
-              <div className="flex flex-col flex-1 min-h-0">
+              <div className="flex flex-col flex-1 min-h-0 w-full max-w-2xl px-6">
                 {/* Center logo */}
                 <div className="flex-1 flex items-center justify-center">
                   <Logo />
                 </div>
 
                 {/* Bottom input area */}
-                <div className="shrink-0 px-6 pb-4 pt-2">
+                <div className="shrink-0 pb-6 pt-2">
                   <div className="font-mono text-[10px] tracking-widest text-primary/60 mb-2 uppercase">
                     System Ready // Awaiting Input
                   </div>
@@ -76,10 +73,12 @@ const Index = () => {
                 </div>
               </div>
             ) : (
-              <ChatResponseView
-                userQuery={currentQuery}
-                onSend={handleSend}
-              />
+              <div className="flex-1 min-h-0 w-full max-w-2xl">
+                <ChatResponseView
+                  userQuery={currentQuery}
+                  onSend={handleSend}
+                />
+              </div>
             )}
           </div>
         </div>
