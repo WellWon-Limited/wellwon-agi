@@ -73,7 +73,15 @@ const MobileChatList = ({
       <div className="shrink-0 flex items-center gap-3 px-4 pt-4 pb-3">
         <button
           onClick={onOpenSettings}
-          className="w-9 h-9 rounded-xl bg-card border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+          style={{
+            background: "rgba(255,255,255,0.08)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+            borderRadius: "50%",
+          }}
+          className="w-10 h-10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="3"/>
@@ -87,7 +95,15 @@ const MobileChatList = ({
 
         <button
           onClick={onNewChat}
-          className="w-9 h-9 rounded-xl bg-card border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+          style={{
+            background: "rgba(255,255,255,0.08)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+            borderRadius: "50%",
+          }}
+          className="w-10 h-10 flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
         >
           <Pencil size={15} />
         </button>
