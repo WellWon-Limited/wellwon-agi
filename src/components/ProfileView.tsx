@@ -3,7 +3,7 @@ import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
   ResponsiveContainer, LineChart, Line, XAxis, Tooltip
 } from "recharts";
-import { Star, TrendingUp, Brain, ChevronDown, ChevronRight } from "lucide-react";
+import { Star, TrendingUp, Brain, ChevronDown, ChevronRight, Zap, Search, BarChart2, Sparkles, ArrowUpRight, Moon, Sun } from "lucide-react";
 import avatarImg from "@/assets/avatar.jpg";
 
 type ProfileTab = "overview" | "domains" | "traits";
@@ -44,18 +44,18 @@ const domains = [
 
 const traits = {
   confirmed: [
-    { label: "Системное мышление", evidence: "97 взаимодействий", icon: "🧠" },
-    { label: "Высокая инициативность", evidence: "Запускает задачи сам", icon: "⚡" },
-    { label: "Детальная рефлексия", evidence: "Вечерние отчёты 90%", icon: "🔍" },
-    { label: "Ориентация на данные", evidence: "Всегда запрашивает метрики", icon: "📊" },
+    { label: "Системное мышление", evidence: "97 взаимодействий", icon: <Brain size={16} /> },
+    { label: "Высокая инициативность", evidence: "Запускает задачи сам", icon: <Zap size={16} /> },
+    { label: "Детальная рефлексия", evidence: "Вечерние отчёты 90%", icon: <Search size={16} /> },
+    { label: "Ориентация на данные", evidence: "Всегда запрашивает метрики", icon: <BarChart2 size={16} /> },
   ],
   candidates: [
-    { label: "Перфекционизм", evidence: "Много правок, высокие стандарты", icon: "✦" },
-    { label: "Автономность", evidence: "Редко делегирует людям", icon: "🚀" },
+    { label: "Перфекционизм", evidence: "Много правок, высокие стандарты", icon: <Sparkles size={16} /> },
+    { label: "Автономность", evidence: "Редко делегирует людям", icon: <ArrowUpRight size={16} /> },
   ],
   signals: [
-    { label: "Творческие блоки по вечерам", evidence: "3 наблюдения", icon: "🌙" },
-    { label: "Пик энергии 9-12", evidence: "Паттерн продуктивности", icon: "☀" },
+    { label: "Творческие блоки по вечерам", evidence: "3 наблюдения", icon: <Moon size={16} /> },
+    { label: "Пик энергии 9-12", evidence: "Паттерн продуктивности", icon: <Sun size={16} /> },
   ],
 };
 
@@ -255,7 +255,7 @@ const ProfileView = () => {
               <div className="space-y-2">
                 {traits.confirmed.map((t, i) => (
                   <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{ background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.15)" }}>
-                    <span className="text-[18px] shrink-0">{t.icon}</span>
+                    <span className="text-foreground shrink-0 flex items-center">{t.icon}</span>
                     <div className="flex-1">
                       <div className="text-[13px] font-semibold text-foreground">{t.label}</div>
                       <div className="font-mono text-[10px] text-muted-foreground/50">{t.evidence}</div>
@@ -275,7 +275,7 @@ const ProfileView = () => {
               <div className="space-y-2">
                 {traits.candidates.map((t, i) => (
                   <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{ background: "rgba(251,191,36,0.07)", border: "1px solid rgba(251,191,36,0.15)" }}>
-                    <span className="text-[18px] shrink-0">{t.icon}</span>
+                    <span className="text-foreground shrink-0 flex items-center">{t.icon}</span>
                     <div className="flex-1">
                       <div className="text-[13px] font-semibold text-foreground">{t.label}</div>
                       <div className="font-mono text-[10px] text-muted-foreground/50">{t.evidence}</div>
@@ -295,7 +295,7 @@ const ProfileView = () => {
               <div className="space-y-2">
                 {traits.signals.map((t, i) => (
                   <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <span className="text-[18px] shrink-0">{t.icon}</span>
+                    <span className="text-foreground shrink-0 flex items-center">{t.icon}</span>
                     <div className="flex-1">
                       <div className="text-[13px] text-foreground/70">{t.label}</div>
                       <div className="font-mono text-[10px] text-muted-foreground/40">{t.evidence}</div>

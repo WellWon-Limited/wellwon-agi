@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   Users, Bot, ChevronRight, Clock, Zap, Star,
   TrendingUp, MessageSquare, CheckCircle2, RefreshCw,
-  ToggleLeft, ToggleRight, Calendar, BarChart2
+  ToggleLeft, ToggleRight, Calendar, BarChart2, Sparkles, PenLine, Target
 } from "lucide-react";
 
 type ExpertTab = "experts" | "agents";
@@ -12,7 +12,7 @@ interface Expert {
   name: string;
   role: string;
   specialty: string;
-  icon: string;
+  icon: React.ReactNode;
   tasksPerMonth: number;
   successRate: number;
   color: string;
@@ -40,7 +40,7 @@ const experts: Expert[] = [
     name: "ЯРВИС",
     role: "Оркестратор",
     specialty: "Координация команды, приоритизация, стратегические решения",
-    icon: "✦",
+    icon: <Sparkles size={20} />,
     tasksPerMonth: 142,
     successRate: 97,
     color: "text-primary",
@@ -58,7 +58,7 @@ const experts: Expert[] = [
     name: "АННА",
     role: "Контент-директор",
     specialty: "Тексты, SMM, рассылки, редакционные планы, копирайтинг",
-    icon: "✍",
+    icon: <PenLine size={20} />,
     tasksPerMonth: 58,
     successRate: 94,
     color: "text-rose-400",
@@ -76,7 +76,7 @@ const experts: Expert[] = [
     name: "МАРК",
     role: "Аналитик данных",
     specialty: "Рыночная аналитика, прогнозы, конкурентный анализ, отчёты",
-    icon: "📊",
+    icon: <BarChart2 size={20} />,
     tasksPerMonth: 34,
     successRate: 91,
     color: "text-blue-400",
@@ -94,7 +94,7 @@ const experts: Expert[] = [
     name: "ЕЛЕНА",
     role: "Маркетолог",
     specialty: "Рекламные кампании, A/B тесты, ROAS оптимизация",
-    icon: "🎯",
+    icon: <Target size={20} />,
     tasksPerMonth: 22,
     successRate: 89,
     color: "text-violet-400",
