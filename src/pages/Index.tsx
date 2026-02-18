@@ -7,6 +7,7 @@ import ChatResponseView from "@/components/ChatResponseView";
 import SearchProtocolModal from "@/components/SearchProtocolModal";
 import BootScreen from "@/components/BootScreen";
 import TasksView from "@/components/TasksView";
+import KnowledgeBaseView from "@/components/KnowledgeBaseView";
 import NavRail from "@/components/NavRail";
 import MobileChatList from "@/components/MobileChatList";
 import MobileBottomNav from "@/components/MobileBottomNav";
@@ -159,16 +160,8 @@ const Index = () => {
 
             {/* Base view */}
             {view === "base" && (
-              <div className="h-full flex items-center justify-center px-6 pt-16">
-                <div className="text-center">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
-                      <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
-                    </svg>
-                  </div>
-                  <div className="font-mono text-[11px] tracking-widest uppercase text-muted-foreground/60 mb-2">База знаний</div>
-                  <p className="text-muted-foreground text-sm">Скоро здесь появится второй мозг JARVIS</p>
-                </div>
+              <div className="h-full overflow-y-auto relative">
+                <KnowledgeBaseView />
               </div>
             )}
 
