@@ -157,7 +157,7 @@ const Index = () => {
             {/* ── BRAIN ── */}
             {view === "brain" && (
               <div className="h-full overflow-hidden relative">
-                <BrainView />
+                <BrainView onNavigate={handleNavigate} />
               </div>
             )}
 
@@ -171,21 +171,21 @@ const Index = () => {
             {/* ── CAPSULES ── */}
             {view === "capsules" && (
               <div className="h-full overflow-hidden relative">
-                <CapsulesView />
+                <CapsulesView onNavigate={handleNavigate} />
               </div>
             )}
 
             {/* ── EXPERTS ── */}
             {view === "experts" && (
               <div className="h-full overflow-hidden relative">
-                <ExpertsView />
+                <ExpertsView onNavigate={handleNavigate} />
               </div>
             )}
 
             {/* ── PROFILE ── */}
             {view === "profile" && (
               <div className="h-full overflow-hidden relative">
-                <ProfileView />
+                <ProfileView onNavigate={handleNavigate} />
               </div>
             )}
 
@@ -208,11 +208,6 @@ const Index = () => {
                       id: "experts", icon: <Users size={22} />, label: "Эксперты",
                       desc: "Каталог агентов и фоновые процессы", color: "text-violet-400",
                       bg: "rgba(183,124,255,0.10)", border: "rgba(183,124,255,0.20)"
-                    },
-                    {
-                      id: "profile", icon: <User size={22} />, label: "Профиль",
-                      desc: "9 доменов, черты личности, тренды", color: "text-primary",
-                      bg: "rgba(234,56,87,0.10)", border: "rgba(234,56,87,0.20)"
                     },
                     {
                       id: "settings", icon: <Settings2 size={22} />, label: "Настройки",

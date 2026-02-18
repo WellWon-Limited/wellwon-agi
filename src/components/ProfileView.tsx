@@ -59,7 +59,11 @@ const traits = {
   ],
 };
 
-const ProfileView = () => {
+interface ProfileViewProps {
+  onNavigate?: (view: string) => void;
+}
+
+const ProfileView = ({ onNavigate }: ProfileViewProps) => {
   const [activeTab, setActiveTab] = useState<ProfileTab>("overview");
   const [expandedDomain, setExpandedDomain] = useState<string | null>(null);
 
@@ -306,6 +310,14 @@ const ProfileView = () => {
             </div>
           </div>
         )}
+        {/* JARVIS button */}
+        <button
+          onClick={() => onNavigate?.("chat")}
+          className="w-full py-3 rounded-2xl flex items-center justify-center gap-2 font-mono text-[12px] tracking-widest uppercase font-bold text-primary-foreground hover:opacity-90 transition-opacity mt-2"
+          style={{ background: "hsl(var(--primary))", boxShadow: "0 8px 24px rgba(234,56,87,0.25)" }}
+        >
+          <Brain size={14} /> Начать сессию с JARVIS
+        </button>
       </div>
     </div>
   );
