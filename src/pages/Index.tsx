@@ -12,7 +12,7 @@ import MobileChatList from "@/components/MobileChatList";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import avatarImg from "@/assets/avatar.jpg";
-import { Globe, Image, Video, Sparkles, Settings2, PenLine } from "lucide-react";
+import { Globe, Image, Video, Sparkles, Settings2, PenLine, CheckSquare, Inbox, Database } from "lucide-react";
 
 type View = "home" | "chat" | "tasks" | "base" | "inbox";
 
@@ -60,20 +60,72 @@ const Index = () => {
           {/* Main content area */}
           <div className="flex-1 min-h-0 overflow-hidden">
 
+            {/* Glass top bar — shared style for non-chat views */}
+            {(view === "tasks" || view === "inbox" || view === "base") && (
+              <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-2.5 px-3 pt-3 pb-3 pointer-events-none">
+                {/* Left icon button */}
+                <button
+                  className="pointer-events-auto w-10 h-10 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  {view === "tasks" && <CheckSquare size={16} />}
+                  {view === "inbox" && <Inbox size={16} />}
+                  {view === "base" && <Database size={16} />}
+                </button>
+
+                {/* Title pill */}
+                <div
+                  className="flex-1 flex items-center justify-center pointer-events-none"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.09)",
+                    boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                    borderRadius: "100px",
+                    padding: "10px 16px",
+                  }}
+                >
+                  <span className="font-mono text-[13px] font-black tracking-widest uppercase text-foreground">
+                    {view === "tasks" && "ЗАДАЧИ"}
+                    {view === "inbox" && "ИНБОКС"}
+                    {view === "base" && "БАЗА"}
+                  </span>
+                </div>
+
+                {/* Settings button */}
+                <button
+                  onClick={() => setSystemOpen(true)}
+                  className="pointer-events-auto w-10 h-10 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
+                  style={{
+                    background: "rgba(255,255,255,0.08)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  <Settings2 size={16} />
+                </button>
+              </div>
+            )}
+
             {/* Tasks view */}
             {view === "tasks" && (
-              <div className="h-full overflow-y-auto">
+              <div className="h-full overflow-y-auto relative pt-16">
                 <TasksView />
               </div>
             )}
 
             {/* Inbox view */}
             {view === "inbox" && (
-              <div className="h-full flex flex-col">
-                <div className="shrink-0 px-4 pt-4 pb-3 border-b border-border/40">
-                  <h1 className="font-mono text-[16px] font-black tracking-widest uppercase text-foreground">Инбокс</h1>
-                  <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5 tracking-widest uppercase">Сбрось что угодно — JARVIS разберёт</p>
-                </div>
+              <div className="h-full flex flex-col relative pt-16">
                 <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-hide">
                   {[
                     { text: "Нужно подготовить презентацию для инвесторов на следующей неделе", time: "2 мин назад", processed: false },
@@ -90,7 +142,6 @@ const Index = () => {
                     </div>
                   ))}
                 </div>
-                {/* Голосовой ввод + поле внизу */}
                 <div className="shrink-0 px-4 pb-4 pt-2 border-t border-border/40">
                   <div className="glass-input rounded-2xl px-4 py-3 flex items-center gap-3">
                     <input
@@ -108,7 +159,7 @@ const Index = () => {
 
             {/* Base view */}
             {view === "base" && (
-              <div className="h-full flex items-center justify-center px-6">
+              <div className="h-full flex items-center justify-center px-6 pt-16">
                 <div className="text-center">
                   <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
@@ -210,15 +261,15 @@ const Index = () => {
                     <button
                       onClick={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
                       style={{
-                        background: "rgba(255,255,255,0.10)",
-                        backdropFilter: "blur(20px)",
-                        WebkitBackdropFilter: "blur(20px)",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                        boxShadow: "0 8px 24px rgba(0,0,0,0.4)"
+                        background: "rgba(255,255,255,0.13)",
+                        backdropFilter: "blur(24px)",
+                        WebkitBackdropFilter: "blur(24px)",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        boxShadow: "0 8px 32px rgba(0,0,0,0.5)"
                       }}
-                      className="absolute bottom-[72px] right-4 w-12 h-12 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-all hover:scale-105 z-10"
+                      className="absolute bottom-4 right-4 w-16 h-16 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-all hover:scale-105 z-10"
                     >
-                      <PenLine size={18} />
+                      <PenLine size={22} />
                     </button>
                   </div>
                 ) : (
