@@ -27,7 +27,7 @@ const MenuItem = ({
 }) => (
   <button
     onClick={onClick}
-    className="w-full flex items-center justify-between py-4 border-b border-border text-left"
+    className="w-full flex items-center justify-between py-4 border-b border-white/5 text-left"
   >
     <div className="flex items-center gap-3">
       <Icon size={20} className="text-muted-foreground" />

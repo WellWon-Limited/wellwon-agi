@@ -100,7 +100,7 @@ const LibraryView = ({ onBack, onOpenChat }: LibraryViewProps) => {
             <div
               key={i}
               onClick={onOpenChat}
-              className={`cursor-pointer py-4 group ${i > 0 ? "border-t border-border" : ""}`}
+              className={`cursor-pointer py-4 group ${i > 0 ? "border-t border-white/5" : ""}`}
             >
               <div className="flex justify-between items-start mb-1">
                 <h3 className="text-[16px] font-medium text-foreground line-clamp-2 leading-snug w-[90%] group-hover:text-primary transition-colors">

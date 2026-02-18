@@ -16,7 +16,7 @@ const tabs: { id: Tab; icon: React.ElementType; label: string }[] = [
 
 const BottomNav = ({ active, onChange }: BottomNavProps) => {
   return (
-    <nav className="shrink-0 border-t border-border bg-background/90 backdrop-blur-xl px-2 pb-6 pt-2">
+    <nav className="shrink-0 border-t border-white/5 bg-background/90 backdrop-blur-xl px-2 pb-6 pt-2">
       <div className="flex items-center justify-around max-w-lg mx-auto">
         {tabs.map(({ id, icon: Icon, label }) => {
           const isActive = active === id;

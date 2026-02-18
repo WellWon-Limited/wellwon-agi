@@ -21,7 +21,7 @@ const SearchProtocolModal = ({ open, selected, onSelect, onClose }: SearchProtoc
       {/* Modal */}
       <div className="relative bg-card border border-border rounded-2xl w-[380px] mx-4 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
           <div className="flex items-center gap-2">
             <div className="w-1 h-5 bg-primary rounded-full" />
             <span className="font-mono text-[14px] font-bold tracking-widest uppercase text-foreground">
