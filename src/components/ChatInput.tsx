@@ -4,6 +4,7 @@ import { Plus, Search, Mic, AudioLines } from "lucide-react";
 interface ChatInputProps {
   onSend: (message: string) => void;
   disabled?: boolean;
+  onSearchClick?: () => void;
 }
 
 const ChatInput = ({ onSend, disabled }: ChatInputProps) => {
