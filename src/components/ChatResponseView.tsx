@@ -210,14 +210,11 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
         </div>
       </div>
 
-      {/* Fixed bottom input */}
-      <div className="shrink-0 px-4 pb-4 pt-2">
-        <div className="font-mono text-[10px] tracking-widest text-primary/60 mb-2 uppercase">
-          System Ready // Awaiting Input
-        </div>
+      {/* Fixed bottom input — прибит к низу */}
+      <div className="shrink-0 px-4 pb-4 pt-2 border-t border-border/30">
         <div className="flex items-center gap-2">
-          <button className="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0">
-            <Plus size={18} />
+          <button className="w-9 h-9 rounded-xl bg-card border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0">
+            <Plus size={17} />
           </button>
           <div className="flex-1 glass-input rounded-xl px-4 py-2.5 flex items-center gap-2">
             <input
@@ -230,23 +227,19 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
                   setFollowUp("");
                 }
               }}
-              placeholder="Введите команду или запрос..."
-              className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground text-[14px] font-mono"
+              placeholder="Продолжить диалог..."
+              className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground/50 text-[14px]"
             />
-            <button className="text-muted-foreground hover:text-foreground transition-colors">
-              <Mic size={16} />
+            <button className="text-muted-foreground/50 hover:text-foreground transition-colors">
+              <Mic size={15} />
             </button>
           </div>
           <button
             onClick={() => { if (followUp.trim()) { onSend(followUp); setFollowUp(""); } }}
             className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shrink-0 hover:opacity-90 transition-opacity"
           >
-            <ArrowUp size={18} />
+            <ArrowUp size={17} />
           </button>
-        </div>
-        <div className="font-mono text-[9px] tracking-widest text-muted-foreground/30 mt-1.5 flex justify-between uppercase">
-          <span>Encryption: AES-256</span>
-          <span>WellWon AI Core 1.0</span>
         </div>
       </div>
     </div>

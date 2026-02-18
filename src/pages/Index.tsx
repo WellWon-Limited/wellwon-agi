@@ -13,7 +13,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import avatarImg from "@/assets/avatar.jpg";
 
-type View = "home" | "chat" | "tasks" | "base";
+type View = "home" | "chat" | "tasks" | "base" | "inbox";
 
 const Index = () => {
   const [booting, setBooting] = useState(true);
@@ -65,6 +65,45 @@ const Index = () => {
               </div>
             )}
 
+            {/* Inbox view */}
+            {view === "inbox" && (
+              <div className="h-full flex flex-col">
+                <div className="shrink-0 px-4 pt-4 pb-3 border-b border-border/40">
+                  <h1 className="font-mono text-[16px] font-black tracking-widest uppercase text-foreground">Инбокс</h1>
+                  <p className="font-mono text-[10px] text-muted-foreground/50 mt-0.5 tracking-widest uppercase">Сбрось что угодно — JARVIS разберёт</p>
+                </div>
+                <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 scrollbar-hide">
+                  {[
+                    { text: "Нужно подготовить презентацию для инвесторов на следующей неделе", time: "2 мин назад", processed: false },
+                    { text: "Идея: сделать рассылку по базе клиентов с новым оффером", time: "14 мин назад", processed: false },
+                    { text: "Посмотри кейс конкурента — они запустили новый продукт", time: "1 ч назад", processed: true },
+                    { text: "Надо разобраться с подпиской на Notion — скоро истекает", time: "3 ч назад", processed: true },
+                  ].map((item, i) => (
+                    <div key={i} className={`flex items-start gap-3 px-4 py-4 bg-card border rounded-2xl transition-all ${item.processed ? "border-border/40 opacity-50" : "border-primary/20"}`}>
+                      <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.processed ? "bg-muted-foreground/40" : "bg-primary animate-pulse"}`} />
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-[14px] leading-snug mb-1 ${item.processed ? "line-through text-muted-foreground" : "text-foreground"}`}>{item.text}</p>
+                        <span className="font-mono text-[10px] text-muted-foreground/50">{item.time}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Голосовой ввод + поле внизу */}
+                <div className="shrink-0 px-4 pb-4 pt-2 border-t border-border/40">
+                  <div className="glass-input rounded-2xl px-4 py-3 flex items-center gap-3">
+                    <input
+                      type="text"
+                      placeholder="Набросай идею или задачу..."
+                      className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground text-[14px] font-mono"
+                    />
+                    <button className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground hover:opacity-90 transition-opacity shrink-0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Base view */}
             {view === "base" && (
               <div className="h-full flex items-center justify-center px-6">
@@ -87,44 +126,44 @@ const Index = () => {
                 {mobileChatOpen ? (
                   <div className="h-full flex flex-col">
                     {/* Mobile chat top bar */}
-                    <div className="shrink-0 flex items-center gap-2 px-3 pt-safe pt-3 pb-3 border-b border-border bg-background/95 backdrop-blur-sm">
+                    <div className="shrink-0 flex items-center gap-2 px-3 pt-3 pb-3 border-b border-border/40 bg-background">
                       <button
                         onClick={handleMobileBack}
-                        className="w-9 h-9 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                        className="w-9 h-9 rounded-xl bg-card border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M19 12H5M12 5l-7 7 7 7"/>
                         </svg>
                       </button>
 
-                      {/* Agent mode pills */}
+                      {/* Agent mode pills — no emojis, only icons+text */}
                       <div className="flex-1 flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
                         {[
-                          { icon: "✦", label: "JARVIS", active: true },
-                          { icon: "🌐", label: "Веб" },
-                          { icon: "🖼", label: "Медиа" },
-                          { icon: "📹", label: "Видео" },
+                          { label: "JARVIS", active: true },
+                          { label: "Веб" },
+                          { label: "Медиа" },
+                          { label: "Видео" },
                         ].map((item) => (
                           <button
                             key={item.label}
-                            className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-mono transition-colors ${
+                            className={`shrink-0 px-3 py-1.5 rounded-lg text-[11px] font-mono tracking-widest uppercase transition-colors ${
                               item.active
                                 ? "bg-primary/15 text-primary border border-primary/30"
-                                : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                                : "bg-card border border-border/50 text-muted-foreground hover:text-foreground"
                             }`}
                           >
-                            <span className="text-[11px]">{item.icon}</span>
-                            <span>{item.label}</span>
+                            {item.label}
                           </button>
                         ))}
                       </div>
 
                       <button
                         onClick={() => setSystemOpen(true)}
-                        className="w-9 h-9 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                        className="w-9 h-9 rounded-xl bg-card border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
                       >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="8" cy="6" r="4"/><path d="M16 6h2"/><circle cx="16" cy="18" r="4"/><path d="M6 18H4"/>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="3"/>
+                          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                         </svg>
                       </button>
                     </div>
@@ -250,14 +289,7 @@ const Index = () => {
                   <Logo />
                 </div>
                 <div className="shrink-0 pb-6 pt-2">
-                  <div className="font-mono text-[10px] tracking-widest text-primary/60 mb-2 uppercase">
-                    System Ready // Awaiting Input
-                  </div>
                   <ChatInput onSend={handleSend} onSearchClick={() => setSearchModalOpen(true)} />
-                  <div className="font-mono text-[9px] tracking-widest text-muted-foreground/30 mt-1.5 flex justify-between uppercase">
-                    <span>Encryption: AES-256</span>
-                    <span>WellWon AI Core 1.0</span>
-                  </div>
                 </div>
               </div>
             ) : (
