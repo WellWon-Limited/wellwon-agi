@@ -54,7 +54,7 @@ const Index = () => {
           {/* Content — centered with max-width */}
           <div className="flex-1 min-h-0 flex flex-col items-center w-full">
             {view === "home" ? (
-              <div className="flex flex-col flex-1 min-h-0 w-full max-w-2xl px-6">
+              <div className="flex flex-col flex-1 min-h-0 w-full max-w-[900px] px-6">
                 {/* Center logo */}
                 <div className="flex-1 flex items-center justify-center">
                   <Logo />
@@ -73,7 +73,7 @@ const Index = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex-1 min-h-0 w-full max-w-2xl">
+              <div className="flex-1 min-h-0 w-full max-w-[900px]">
                 <ChatResponseView
                   userQuery={currentQuery}
                   onSend={handleSend}
