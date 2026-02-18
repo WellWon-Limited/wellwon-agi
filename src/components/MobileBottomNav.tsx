@@ -1,4 +1,4 @@
-import { MessageSquare, CheckSquare, Database } from "lucide-react";
+import { MessageSquare, CheckSquare, Database, Inbox } from "lucide-react";
 
 interface MobileBottomNavProps {
   activeView: string;
@@ -8,6 +8,7 @@ interface MobileBottomNavProps {
 const navItems = [
   { id: "home", icon: MessageSquare, label: "Беседы" },
   { id: "tasks", icon: CheckSquare, label: "Задачи" },
+  { id: "inbox", icon: Inbox, label: "Инбокс" },
   { id: "base", icon: Database, label: "База" },
 ];
 

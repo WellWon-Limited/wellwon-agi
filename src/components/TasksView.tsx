@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  Plus, Inbox, CheckSquare, Zap, Users, Brain, Globe,
+  Plus, CheckSquare, Zap, Users, Brain, Globe,
   Clock, Sparkles, Mic, MoreHorizontal, Flag, Calendar,
   Tag, Circle, CircleDot, CircleCheck, AlertCircle, Cpu,
   Search, Filter, ArrowUp, ChevronRight, X, Check, ArrowUpRight
@@ -106,12 +106,6 @@ const tasks: Task[] = [
   },
 ];
 
-const inboxItems = [
-  { id: "i1", text: "Нужно подготовить презентацию для инвесторов на следующей неделе", time: "2 мин назад", processed: false },
-  { id: "i2", text: "Идея: сделать рассылку по базе клиентов с новым оффером", time: "14 мин назад", processed: false },
-  { id: "i3", text: "Посмотри кейс конкурента — они запустили новый продукт", time: "1 ч назад", processed: true },
-  { id: "i4", text: "Надо разобраться с подпиской на Notion — скоро истекает", time: "3 ч назад", processed: true },
-];
 
 /* ─── Helpers ─── */
 const priorityConfig: Record<Priority, { label: string; color: string; dot: string }> = {
@@ -384,12 +378,11 @@ const TaskDetail = ({ task, onClose }: { task: Task; onClose: () => void }) => {
 };
 
 /* ─── Main TasksView ─── */
-type TaskTab = "board" | "inbox" | "agents";
+type TaskTab = "board" | "agents";
 
 const TasksView = () => {
   const [activeTab, setActiveTab] = useState<TaskTab>("board");
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [inboxInput, setInboxInput] = useState("");
 
   const columns: { status: Status; tasks: Task[] }[] = [
     { status: "active", tasks: tasks.filter((t) => t.status === "active") },
@@ -400,57 +393,51 @@ const TasksView = () => {
 
   const tabs: { id: TaskTab; label: string; icon: React.ReactNode; count?: number }[] = [
     { id: "board", label: "Задачи", icon: <CheckSquare size={14} />, count: tasks.filter(t => t.status !== "done").length },
-    { id: "inbox", label: "Инбокс", icon: <Inbox size={14} />, count: inboxItems.filter(i => !i.processed).length },
     { id: "agents", label: "Команда", icon: <Users size={14} />, count: agents.filter(a => a.status !== "idle").length },
   ];
 
   return (
     <div className="flex flex-col flex-1 min-h-0 w-full h-full">
       {/* Header */}
-      <div className="shrink-0 px-4 md:px-6 pt-5 pb-4">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <div className="flex items-center gap-2.5 mb-1">
-              <div className="w-8 h-8 rounded-xl bg-primary/15 flex items-center justify-center">
-                <Cpu size={15} className="text-primary" />
-              </div>
-              <h1 className="text-[20px] md:text-[22px] font-black tracking-tight text-foreground">
-                Командный <span className="text-primary">Центр</span>
-              </h1>
+      <div className="shrink-0 px-4 md:px-6 pt-4 pb-3">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-7 h-7 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <Cpu size={13} className="text-primary" />
             </div>
-            <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground/60">
-              JARVIS · {tasks.filter(t => t.status === "active").length} активных · {agents.filter(a => a.status !== "idle").length} агентов в работе
-            </div>
+            <h1 className="text-[18px] md:text-[22px] font-black tracking-tight text-foreground whitespace-nowrap">
+              Командный <span className="text-primary">Центр</span>
+            </h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary border border-border">
-              <div className="w-1.5 h-1.5 rounded-full bg-foreground/40 animate-pulse" />
-              <span className="font-mono text-[10px] text-muted-foreground">{tasks.filter(t=>t.status==="done").length} завершено</span>
-            </div>
+          <div className="flex items-center gap-2 shrink-0">
             <button className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-primary-foreground font-mono text-[11px] tracking-widest uppercase hover:opacity-90 transition-opacity">
-              <Plus size={13} />
+              <Plus size={12} />
               <span className="hidden sm:inline">Задача</span>
             </button>
           </div>
         </div>
 
+        <div className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground/50 mb-3">
+          {tasks.filter(t => t.status === "active").length} активных · {agents.filter(a => a.status !== "idle").length} агентов в работе
+        </div>
+
         {/* Tabs */}
-        <div className="flex items-center gap-1 bg-card border border-border rounded-2xl p-1">
+        <div className="flex items-center gap-1 bg-card border border-border/40 rounded-xl p-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl font-mono text-[11px] md:text-[12px] tracking-widest uppercase transition-all flex-1 justify-center ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg font-mono text-[11px] tracking-widest uppercase transition-all flex-1 justify-center ${
                 activeTab === tab.id
-                  ? "bg-primary text-primary-foreground font-bold shadow-sm"
+                  ? "bg-primary text-primary-foreground font-bold"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}
             >
               {tab.icon}
-              {tab.label}
+              <span className="truncate">{tab.label}</span>
               {tab.count !== undefined && tab.count > 0 && (
-                <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded-lg min-w-[20px] text-center ${
+                <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded min-w-[16px] text-center shrink-0 ${
                   activeTab === tab.id ? "bg-white/20 text-white" : "bg-secondary text-muted-foreground"
                 }`}>
                   {tab.count}
@@ -527,101 +514,8 @@ const TasksView = () => {
           </>
         )}
 
-        {/* Inbox tab */}
-        {activeTab === "inbox" && (
-          <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 scrollbar-hide">
-            {/* Quick capture with big voice button */}
-            <div className="mb-6">
-              <div className="font-mono text-[10px] tracking-widest uppercase text-primary/60 mb-3">
-                Быстрый захват
-              </div>
-              <div className="glass-input rounded-2xl px-4 py-3 flex items-center gap-3 mb-3">
-                <Brain size={16} className="text-primary shrink-0" />
-                <input
-                  type="text"
-                  value={inboxInput}
-                  onChange={(e) => setInboxInput(e.target.value)}
-                  placeholder="Сбросить идею, задачу, напоминание..."
-                  className="flex-1 bg-transparent outline-none text-foreground placeholder:text-muted-foreground text-[14px] font-mono"
-                />
-                <button className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-primary-foreground hover:opacity-90 transition-opacity shrink-0">
-                  <ArrowUp size={14} />
-                </button>
-              </div>
 
-              {/* Big voice dictation button */}
-              <div className="flex items-center gap-3">
-                <button className="flex-1 h-14 rounded-2xl border-2 border-primary/25 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 transition-all flex items-center justify-center gap-3 group">
-                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-primary/30">
-                    <Mic size={18} className="text-primary-foreground" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-[14px] font-semibold text-foreground">Голосовой ввод</div>
-                    <div className="font-mono text-[10px] text-muted-foreground/60 tracking-widest uppercase">Нажми и говори</div>
-                  </div>
-                </button>
-              </div>
 
-              <div className="font-mono text-[9px] tracking-widest text-muted-foreground/30 mt-2 uppercase">
-                JARVIS обработает и разложит по категориям автоматически
-              </div>
-            </div>
-
-            {/* Unprocessed */}
-            <div className="mb-5">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground font-bold">
-                  Необработанные · {inboxItems.filter(i => !i.processed).length}
-                </span>
-              </div>
-              <div className="space-y-2.5">
-                {inboxItems.filter(i => !i.processed).map((item) => (
-                  <div key={item.id} className="flex items-start gap-3 px-4 py-4 bg-card border-2 border-primary/15 rounded-2xl hover:border-primary/30 transition-all group cursor-pointer">
-                    <div className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0 animate-pulse" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[14px] text-foreground leading-snug mb-1.5">{item.text}</p>
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-[10px] text-muted-foreground/50">{item.time}</span>
-                        <span className="font-mono text-[9px] tracking-widest uppercase text-primary/60 px-1.5 py-0.5 rounded-lg bg-primary/10">
-                          Ожидает
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                      <button className="p-1.5 rounded-xl bg-primary/15 text-primary hover:bg-primary/25 transition-colors">
-                        <Sparkles size={13} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Processed */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground" />
-                <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground font-bold">
-                  Обработанные · {inboxItems.filter(i => i.processed).length}
-                </span>
-              </div>
-              <div className="space-y-2">
-                {inboxItems.filter(i => i.processed).map((item) => (
-                  <div key={item.id} className="flex items-start gap-3 px-4 py-3.5 bg-card border-2 border-border rounded-2xl opacity-50">
-                    <CircleCheck size={14} className="text-foreground/40 mt-0.5 shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] line-through text-muted-foreground leading-snug">{item.text}</p>
-                      <span className="font-mono text-[10px] text-muted-foreground/40">{item.time}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Agents tab */}
         {activeTab === "agents" && (
           <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 scrollbar-hide space-y-5">
             {/* Team header */}
