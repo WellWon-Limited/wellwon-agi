@@ -34,7 +34,7 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto px-4 pt-[64px] pb-4 scrollbar-hide md:px-6 md:pt-6 md:pb-6">
 
         {/* User message bubble */}
         <div className="flex justify-end mb-8">
