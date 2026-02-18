@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Layers, Search, MessageSquare, Database, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Layers, Search, MessageSquare, Database, PanelLeftClose, PanelLeftOpen, CheckSquare } from "lucide-react";
 
 const activeSession = {
   title: "Стоимость 1кВт",
