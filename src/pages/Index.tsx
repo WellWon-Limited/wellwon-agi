@@ -12,11 +12,13 @@ import MobileChatList from "@/components/MobileChatList";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import { useIsMobile } from "@/hooks/use-mobile";
 import avatarImg from "@/assets/avatar.jpg";
+import { Globe, Image, Video, Sparkles, Settings2, PenLine } from "lucide-react";
 
 type View = "home" | "chat" | "tasks" | "base" | "inbox";
 
 const Index = () => {
   const [booting, setBooting] = useState(true);
+  const [activeMode, setActiveMode] = useState(0);
   const [view, setView] = useState<View>("home");
   const [systemOpen, setSystemOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
@@ -124,57 +126,100 @@ const Index = () => {
               <>
                 {/* Chat detail view */}
                 {mobileChatOpen ? (
-                  <div className="h-full flex flex-col">
-                    {/* Mobile chat top bar */}
-                    <div className="shrink-0 flex items-center gap-2 px-3 pt-3 pb-3 border-b border-border/40 bg-background">
+                  <div className="h-full flex flex-col relative">
+                    {/* Glass floating top bar */}
+                    <div className="absolute top-0 left-0 right-0 z-10 flex items-center gap-2.5 px-3 pt-3 pb-3">
+                      {/* Back button — round glass */}
                       <button
                         onClick={handleMobileBack}
-                        className="w-9 h-9 rounded-xl bg-card border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                        style={{
+                          background: "rgba(255,255,255,0.08)",
+                          backdropFilter: "blur(20px)",
+                          WebkitBackdropFilter: "blur(20px)",
+                          border: "1px solid rgba(255,255,255,0.10)",
+                          boxShadow: "0 4px 16px rgba(0,0,0,0.3)"
+                        }}
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-colors shrink-0"
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M19 12H5M12 5l-7 7 7 7"/>
                         </svg>
                       </button>
 
-                      {/* Agent mode pills — no emojis, only icons+text */}
-                      <div className="flex-1 flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
+                      {/* Mode pill — glass pill with icon buttons */}
+                      <div
+                        className="flex-1 flex items-center"
+                        style={{
+                          background: "rgba(255,255,255,0.06)",
+                          backdropFilter: "blur(20px)",
+                          WebkitBackdropFilter: "blur(20px)",
+                          border: "1px solid rgba(255,255,255,0.09)",
+                          boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                          borderRadius: "100px",
+                          padding: "4px",
+                        }}
+                      >
                         {[
-                          { label: "JARVIS", active: true },
-                          { label: "Веб" },
-                          { label: "Медиа" },
-                          { label: "Видео" },
-                        ].map((item) => (
+                          { icon: <Sparkles size={17} />, label: "JARVIS" },
+                          { icon: <Globe size={17} />, label: "Веб" },
+                          { icon: <Image size={17} />, label: "Медиа" },
+                          { icon: <Video size={17} />, label: "Видео" },
+                        ].map((item, i) => (
                           <button
-                            key={item.label}
-                            className={`shrink-0 px-3 py-1.5 rounded-lg text-[11px] font-mono tracking-widest uppercase transition-colors ${
-                              item.active
-                                ? "bg-primary/15 text-primary border border-primary/30"
-                                : "bg-card border border-border/50 text-muted-foreground hover:text-foreground"
-                            }`}
+                            key={i}
+                            onClick={() => setActiveMode(i)}
+                            title={item.label}
+                            className="flex-1 h-9 rounded-full flex items-center justify-center transition-all"
+                            style={activeMode === i ? {
+                              background: "rgba(255,255,255,0.12)",
+                              color: "hsl(var(--primary))",
+                            } : {
+                              color: "rgba(255,255,255,0.45)",
+                            }}
                           >
-                            {item.label}
+                            {item.icon}
                           </button>
                         ))}
                       </div>
 
+                      {/* Settings button — round glass */}
                       <button
                         onClick={() => setSystemOpen(true)}
-                        className="w-9 h-9 rounded-xl bg-card border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                        style={{
+                          background: "rgba(255,255,255,0.08)",
+                          backdropFilter: "blur(20px)",
+                          WebkitBackdropFilter: "blur(20px)",
+                          border: "1px solid rgba(255,255,255,0.10)",
+                          boxShadow: "0 4px 16px rgba(0,0,0,0.3)"
+                        }}
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-foreground/70 hover:text-foreground transition-colors shrink-0"
                       >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="3"/>
-                          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-                        </svg>
+                        <Settings2 size={16} />
                       </button>
                     </div>
 
-                    {/* Chat content */}
+                    {/* Chat content — padding top for floating bar */}
                     <div className="flex-1 min-h-0">
                       <ChatResponseView
                         userQuery={currentQuery}
                         onSend={handleSend}
                       />
                     </div>
+
+                    {/* Floating new chat button */}
+                    <button
+                      onClick={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
+                      style={{
+                        background: "rgba(255,255,255,0.10)",
+                        backdropFilter: "blur(20px)",
+                        WebkitBackdropFilter: "blur(20px)",
+                        border: "1px solid rgba(255,255,255,0.12)",
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.4)"
+                      }}
+                      className="absolute bottom-[72px] right-4 w-12 h-12 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-all hover:scale-105 z-10"
+                    >
+                      <PenLine size={18} />
+                    </button>
                   </div>
                 ) : (
                   /* Mobile chat list */
