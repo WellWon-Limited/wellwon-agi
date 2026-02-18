@@ -6,9 +6,10 @@ import SystemPanel from "@/components/SystemPanel";
 import ChatResponseView from "@/components/ChatResponseView";
 import SearchProtocolModal from "@/components/SearchProtocolModal";
 import BootScreen from "@/components/BootScreen";
+import TasksView from "@/components/TasksView";
 import avatarImg from "@/assets/avatar.jpg";
 
-type View = "home" | "chat";
+type View = "home" | "chat" | "tasks";
 
 const Index = () => {
   const [booting, setBooting] = useState(true);
