@@ -95,7 +95,7 @@ const MobileChatList = ({
 
       {/* Search bar */}
       <div className="shrink-0 px-4 pb-3">
-        <div className="flex items-center gap-2 bg-card border border-border/30 rounded-xl px-4 py-2.5">
+        <div className="flex items-center gap-2 bg-card rounded-xl px-4 py-2.5" style={{border: "1px solid rgba(255,255,255,0.05)"}}>
           <Search size={14} className="text-muted-foreground/40 shrink-0" />
           <input
             type="text"
@@ -113,7 +113,7 @@ const MobileChatList = ({
           <button
             key={i}
             onClick={() => onSelectSession(session.title)}
-            className="w-full text-left px-4 py-4 border-b border-border/20 hover:bg-card/30 transition-colors active:bg-card/50 relative"
+            className="w-full text-left px-4 py-4 hover:bg-card/30 transition-colors active:bg-card/50 relative"
           >
             <div className="flex items-start gap-1 pr-8">
               <div className="flex-1 min-w-0">
