@@ -275,19 +275,19 @@ const Index = () => {
                       onNewChat={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
                       onSend={handleSend}
                     />
-                    {/* FAB — new chat */}
+                    {/* FAB — new chat, полупрозрачный */}
                     <button
                       onClick={() => { setView("home"); setMobileChatOpen(true); setCurrentQuery(""); }}
                       style={{
-                        background: "rgba(255,255,255,0.13)",
-                        backdropFilter: "blur(24px)",
-                        WebkitBackdropFilter: "blur(24px)",
-                        border: "1px solid rgba(255,255,255,0.18)",
-                        boxShadow: "0 8px 32px rgba(0,0,0,0.5)"
+                        background: "rgba(255,255,255,0.06)",
+                        backdropFilter: "blur(20px)",
+                        WebkitBackdropFilter: "blur(20px)",
+                        border: "1px solid rgba(255,255,255,0.10)",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.3)"
                       }}
-                      className="absolute bottom-4 right-4 w-16 h-16 rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground transition-all hover:scale-105 z-10"
+                      className="absolute bottom-4 right-4 w-14 h-14 rounded-full flex items-center justify-center text-foreground/50 hover:text-foreground/80 transition-all hover:scale-105 z-10"
                     >
-                      <PenLine size={22} />
+                      <PenLine size={19} />
                     </button>
                   </div>
                 )}
