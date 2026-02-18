@@ -7,6 +7,10 @@ import {
 
 type ExpertTab = "experts" | "agents";
 
+interface ExpertsViewProps {
+  onNavigate?: (view: string) => void;
+}
+
 interface Expert {
   id: string;
   name: string;
@@ -161,7 +165,7 @@ const agentsData: Agent[] = [
   },
 ];
 
-const ExpertsView = () => {
+const ExpertsView = ({ onNavigate }: ExpertsViewProps) => {
   const [activeTab, setActiveTab] = useState<ExpertTab>("experts");
   const [selectedExpert, setSelectedExpert] = useState<string | null>(null);
   const [agentStates, setAgentStates] = useState<Record<string, boolean>>(
@@ -326,10 +330,11 @@ const ExpertsView = () => {
             </div>
 
             <button
+              onClick={() => onNavigate?.("chat")}
               className="w-full py-3 rounded-2xl flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest uppercase hover:opacity-80 transition-opacity"
-              style={{ background: expert.bg, border: `1px solid ${expert.border}`, color: expert.color.replace("text-", "") }}
+              style={{ background: expert.bg, border: `1px solid ${expert.border}` }}
             >
-              <MessageSquare size={13} /> Написать {expert.name}
+              <MessageSquare size={13} className={expert.color} /> <span className={expert.color}>Написать {expert.name}</span>
             </button>
           </div>
         )}

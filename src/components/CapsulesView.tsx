@@ -4,6 +4,10 @@ import {
   Check, Link2, Edit2, AlertCircle, Play
 } from "lucide-react";
 
+interface CapsulesViewProps {
+  onNavigate?: (view: string) => void;
+}
+
 type CapsuleType = "check" | "remind" | "execute";
 
 interface Capsule {
@@ -137,8 +141,12 @@ const urgencyColor = (days: number) => {
   return "text-emerald-400";
 };
 
-const CapsulesView = () => {
+const CapsulesView = ({ onNavigate }: CapsulesViewProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showNewForm, setShowNewForm] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [newType, setNewType] = useState<CapsuleType>("remind");
+  const [newDate, setNewDate] = useState("");
 
   const selected = selectedId
     ? [...capsules, ...firedCapsules].find(c => c.id === selectedId)
@@ -346,8 +354,69 @@ const CapsulesView = () => {
         })}
       </div>
 
+      {/* New Capsule Form */}
+      {showNewForm && (
+        <div
+          className="fixed inset-0 z-30 flex items-end"
+          onClick={() => setShowNewForm(false)}
+        >
+          <div
+            className="w-full rounded-t-3xl px-5 pt-6 pb-10 space-y-4"
+            style={{ background: "hsl(240,10%,8%)", border: "1px solid rgba(255,255,255,0.10)" }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-mono text-[13px] font-bold tracking-widest uppercase text-foreground">Новая капсула</span>
+              <button onClick={() => setShowNewForm(false)} className="text-muted-foreground/60 hover:text-foreground">
+                <X size={18} />
+              </button>
+            </div>
+            <input
+              type="text"
+              placeholder="Название капсулы..."
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              className="w-full bg-transparent border border-white/10 rounded-xl px-4 py-3 text-foreground text-[14px] outline-none font-mono placeholder:text-muted-foreground/40 focus:border-primary/40"
+            />
+            <div className="flex gap-2">
+              {(["check", "remind", "execute"] as CapsuleType[]).map(t => {
+                const cfg = typeConfig[t];
+                return (
+                  <button
+                    key={t}
+                    onClick={() => setNewType(t)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl font-mono text-[10px] tracking-widest uppercase transition-all ${cfg.color}`}
+                    style={{
+                      background: newType === t ? cfg.bg : "rgba(255,255,255,0.03)",
+                      border: `1px solid ${newType === t ? cfg.border : "rgba(255,255,255,0.07)"}`,
+                    }}
+                  >
+                    {cfg.icon} {cfg.label}
+                  </button>
+                );
+              })}
+            </div>
+            <input
+              type="date"
+              value={newDate}
+              onChange={e => setNewDate(e.target.value)}
+              className="w-full bg-transparent border border-white/10 rounded-xl px-4 py-3 text-foreground text-[14px] outline-none font-mono focus:border-primary/40"
+              style={{ colorScheme: "dark" }}
+            />
+            <button
+              onClick={() => { setShowNewForm(false); setNewTitle(""); setNewDate(""); }}
+              className="w-full py-3 rounded-2xl flex items-center justify-center gap-2 font-mono text-[12px] tracking-widest uppercase font-bold text-primary-foreground transition-opacity hover:opacity-90"
+              style={{ background: "hsl(var(--primary))" }}
+            >
+              <Check size={14} /> Создать капсулу
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* FAB */}
       <button
+        onClick={() => setShowNewForm(true)}
         className="fixed bottom-20 right-4 z-20 w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95"
         style={{
           background: "hsl(var(--primary))",

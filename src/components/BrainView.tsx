@@ -54,7 +54,11 @@ const typeLabel: Record<string, string> = {
 };
 
 /* ─── Main Component ─── */
-const BrainView = () => {
+interface BrainViewProps {
+  onNavigate?: (view: string) => void;
+}
+
+const BrainView = ({ onNavigate }: BrainViewProps) => {
   const [activeTab, setActiveTab] = useState<BrainTab>("inbox");
   const [selectedZettel, setSelectedZettel] = useState<string | null>(null);
   const [selectedPerson, setSelectedPerson] = useState<string | null>(null);
@@ -158,6 +162,7 @@ const BrainView = () => {
                         <button
                           className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md text-blue-400 hover:opacity-80 transition-opacity"
                           style={{ background: "rgba(74,158,255,0.1)", border: "1px solid rgba(74,158,255,0.2)" }}
+                          onClick={() => onNavigate?.("tasks")}
                         >
                           → Задача
                         </button>
@@ -416,6 +421,7 @@ const BrainView = () => {
             </div>
 
             <button
+              onClick={() => onNavigate?.("chat")}
               className="w-full py-3 rounded-2xl flex items-center justify-center gap-2 font-mono text-[11px] tracking-widest uppercase text-primary hover:opacity-80 transition-opacity"
               style={{ background: "rgba(234,56,87,0.08)", border: "1px solid rgba(234,56,87,0.18)" }}
             >
