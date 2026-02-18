@@ -15,6 +15,8 @@ interface SidebarProps {
   onOpenSettings: () => void;
   currentSession: string;
   onSelectSession: (title: string) => void;
+  activeView?: string;
+  onNavigate?: (view: string) => void;
 }
 
 const Sidebar = ({ onOpenSettings, currentSession, onSelectSession }: SidebarProps) => {
