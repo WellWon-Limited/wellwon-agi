@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Logo from "@/components/Logo";
 import ChatInput from "@/components/ChatInput";
 import Sidebar from "@/components/Sidebar";
@@ -7,7 +7,6 @@ import ChatResponseView from "@/components/ChatResponseView";
 import SearchProtocolModal from "@/components/SearchProtocolModal";
 import BootScreen from "@/components/BootScreen";
 import avatarImg from "@/assets/avatar.jpg";
-import { Grid3x3, Sparkles, Minimize2 } from "lucide-react";
 
 type View = "home" | "chat";
 
@@ -43,7 +42,7 @@ const Index = () => {
         {/* Main area */}
         <div className="flex-1 flex flex-col min-w-0 relative">
           {/* Top bar */}
-          <header className="shrink-0 flex items-center justify-between px-6 pt-5 pb-3 border-b border-border/40">
+          <header className="shrink-0 flex items-center justify-between px-6 pt-5 pb-3">
             <div />
             <div className="flex items-center gap-2">
               <button
@@ -90,18 +89,6 @@ const Index = () => {
           <SystemPanel onClose={() => setSystemOpen(false)} />
         )}
 
-        {/* Right side floating buttons */}
-        <div className="absolute right-4 bottom-24 flex flex-col gap-2 z-10">
-          <button className="w-9 h-9 bg-card border border-border rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-            <Grid3x3 size={16} />
-          </button>
-          <button className="w-9 h-9 bg-card border border-border rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-            <Sparkles size={16} />
-          </button>
-          <button className="w-9 h-9 bg-card border border-border rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-            <Minimize2 size={16} />
-          </button>
-        </div>
       </div>
 
       <SearchProtocolModal
