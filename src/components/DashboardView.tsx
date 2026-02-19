@@ -245,7 +245,7 @@ const DashboardView = ({ onNavigate }: DashboardViewProps) => {
       </div>
 
       {/* ── FAB ── */}
-      <div className="fixed bottom-20 right-4 z-20 flex flex-col items-end gap-2">
+      <div className="fixed bottom-[88px] right-4 z-20 flex flex-col items-end gap-2">
         {fabOpen && (
           <div className="flex flex-col items-end gap-2 mb-1">
             {[

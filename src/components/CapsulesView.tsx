@@ -161,15 +161,25 @@ const CapsulesView = ({ onNavigate }: CapsulesViewProps) => {
   if (selected) {
     const cfg = typeConfig[selected.type];
     return (
-      <div className="h-full overflow-y-auto scrollbar-hide">
+      <div className="h-full overflow-y-auto scrollbar-hide relative">
+        {/* Floating back button */}
+        <button
+          onClick={() => setSelectedId(null)}
+          className="fixed top-3 left-3 z-20 flex items-center gap-2 px-4 py-2.5 font-mono text-[11px] tracking-widest uppercase text-foreground/70 hover:text-foreground transition-colors"
+          style={{
+            background: "rgba(255,255,255,0.08)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            borderRadius: "100px",
+          }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          Назад
+        </button>
         <div className="px-4 pt-20 pb-8 space-y-4">
-          {/* Back */}
-          <button
-            onClick={() => setSelectedId(null)}
-            className="flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-muted-foreground/60 hover:text-foreground transition-colors"
-          >
-            <ChevronRight size={12} className="rotate-180" /> Назад
-          </button>
 
           {/* Header */}
           <div

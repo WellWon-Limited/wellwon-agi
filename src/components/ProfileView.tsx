@@ -142,8 +142,8 @@ const ProfileView = ({ onNavigate }: ProfileViewProps) => {
                 <Brain size={14} className="text-primary" />
                 <span className="font-mono text-[11px] tracking-widest uppercase text-foreground font-bold">9 доменов жизни</span>
               </div>
-              <ResponsiveContainer width="100%" height={240}>
-                <RadarChart data={radarData} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
+              <ResponsiveContainer width="100%" height={200}>
+                <RadarChart data={radarData} margin={{ top: 5, right: 15, bottom: 5, left: 15 }}>
                   <PolarGrid stroke="rgba(255,255,255,0.07)" />
                   <PolarAngleAxis
                     dataKey="domain"

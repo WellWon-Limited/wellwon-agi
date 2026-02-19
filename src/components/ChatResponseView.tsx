@@ -1,4 +1,4 @@
-import { Sparkles, Copy, ThumbsUp, ThumbsDown, Mic, Plus, ArrowUp, Share2, Download, RotateCcw, MoreHorizontal, ArrowUpRight } from "lucide-react";
+import { Sparkles, Copy, ThumbsUp, ThumbsDown, Mic, Plus, ArrowUp, Share2, Download, RotateCcw, MoreHorizontal, ArrowUpRight, ChevronDown, ChevronUp, Zap, Network, GitMerge } from "lucide-react";
 import { useState } from "react";
 
 interface ChatResponseViewProps {
@@ -19,26 +19,42 @@ const followUpSuggestions = [
   { text: "Какие отличия open-source CrewAI от платной версии" },
   { text: "Как установить и запустить CrewAI бесплатно" },
   { text: "Какие LLM нужны для работы с CrewAI" },
-  { text: "Примеры использования CrewAI для автоматизации задентов" },
+  { text: "Примеры использования CrewAI для автоматизации задач" },
+];
+
+const cotSteps = [
+  { icon: <Network size={12} />, label: "Router", time: "0.2s", desc: "Классифицировал запрос → тип: техническое исследование" },
+  { icon: <Zap size={12} />, label: "CEO mode", time: "0.4s", desc: "Определил стратегию: web search + knowledge base" },
+  { icon: <Sparkles size={12} />, label: "Expert (МАРК)", time: "1.8s", desc: "Анализ 5 источников, извлечение ключевых фактов" },
+  { icon: <GitMerge size={12} />, label: "Synthesis", time: "0.6s", desc: "Сформировал ответ, проверил логику, добавил нюансы" },
 ];
 
 const SourceBadge = ({ n }: { n: number }) => (
-  <span className="inline-flex items-center gap-1 bg-secondary border border-border text-[10px] font-mono text-muted-foreground rounded px-1.5 py-0.5 mx-0.5">
+  <span className="inline-flex items-center gap-1 text-[10px] font-mono rounded px-1.5 py-0.5 mx-0.5" style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.10)" }}>
     {["github", "crewai", "aitoolsforest", "lindy", "github"][n - 1]} +1
   </span>
 );
 
+const glassStyle = {
+  background: "rgba(255,255,255,0.06)",
+  border: "1px solid rgba(255,255,255,0.09)",
+};
+
 const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
   const [followUp, setFollowUp] = useState("");
+  const [cotOpen, setCotOpen] = useState(false);
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-4 pt-[64px] pb-4 scrollbar-hide md:px-6 md:pt-6 md:pb-6">
 
-        {/* User message bubble */}
+        {/* User message bubble — glass style */}
         <div className="flex justify-end mb-8">
-          <div className="bg-card border border-border rounded-2xl px-5 py-3 max-w-[75%]">
+          <div
+            className="rounded-2xl px-5 py-3 max-w-[75%]"
+            style={glassStyle}
+          >
             <p className="text-[15px] text-foreground leading-relaxed">
               {userQuery || "CrewAI не понимаю это бесплатно? на сайте у них платно вроде"}
             </p>
@@ -46,43 +62,80 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
         </div>
 
         {/* Sources checked row */}
-        <div className="flex items-center gap-2 mb-6 text-muted-foreground/60 text-[13px] font-mono">
+        <div className="flex items-center gap-2 mb-4 text-muted-foreground/60 text-[13px] font-mono">
           <span>Проверено {mockSources.length} источников</span>
           <span className="text-primary/40">›</span>
         </div>
 
+        {/* Chain of Thought collapsible */}
+        <div className="mb-5">
+          <button
+            onClick={() => setCotOpen(!cotOpen)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full font-mono text-[10px] tracking-widest uppercase transition-all hover:opacity-80"
+            style={{ background: "rgba(234,56,87,0.08)", border: "1px solid rgba(234,56,87,0.18)" }}
+          >
+            <Sparkles size={10} className="text-primary" />
+            <span className="text-primary font-bold">Chain of Thought</span>
+            {cotOpen ? <ChevronUp size={10} className="text-primary" /> : <ChevronDown size={10} className="text-primary" />}
+            <span className="text-muted-foreground/50 ml-1">3.0s</span>
+          </button>
+
+          {cotOpen && (
+            <div className="mt-3 rounded-2xl overflow-hidden" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              {cotSteps.map((step, i) => (
+                <div key={i} className="flex items-start gap-3 px-4 py-3 border-b border-white/5 last:border-0">
+                  <div className="flex flex-col items-center gap-1 shrink-0 mt-0.5">
+                    <div className="w-6 h-6 rounded-lg flex items-center justify-center text-primary" style={{ background: "rgba(234,56,87,0.12)" }}>
+                      {step.icon}
+                    </div>
+                    {i < cotSteps.length - 1 && <div className="w-px h-3 bg-white/8" />}
+                  </div>
+                  <div className="flex-1 min-w-0 pb-1">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="font-mono text-[11px] font-bold text-foreground">{step.label}</span>
+                      <span className="font-mono text-[10px] text-primary/60">{step.time}</span>
+                    </div>
+                    <p className="font-mono text-[11px] text-muted-foreground/60 leading-snug">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* AI response */}
         <div>
-          {/* WellWon AI label */}
+          {/* JARVIS label */}
           <div className="flex items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(234,56,87,0.15)" }}>
               <Sparkles size={16} className="text-primary" />
             </div>
             <span className="text-[15px] font-semibold text-foreground">
-              WellWon <span className="text-primary font-bold">AI</span>
+              JARVIS
+            </span>
+            <span className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full text-primary" style={{ background: "rgba(234,56,87,0.10)", border: "1px solid rgba(234,56,87,0.20)" }}>
+              Slow path
             </span>
           </div>
 
           {/* Rich text body */}
           <div className="space-y-4 mb-6 text-[15px] text-foreground leading-relaxed">
-
             <p>
               Коротко: есть две <strong>разные вещи под брендом CrewAI</strong>.
             </p>
 
-            {/* Numbered list */}
             <ol className="space-y-3 list-none">
               <li className="flex gap-3">
-                <span className="shrink-0 w-6 h-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-mono text-[11px] font-bold text-primary mt-0.5">1</span>
+                <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-mono text-[11px] font-bold text-primary mt-0.5" style={{ background: "rgba(234,56,87,0.10)", border: "1px solid rgba(234,56,87,0.20)" }}>1</span>
                 <p>
                   <strong>Open-source фреймворк</strong>{" "}
-                  <code className="bg-secondary px-1.5 py-0.5 rounded text-[12px] font-mono text-foreground/80">crewAIInc/crewAI</code>{" "}
+                  <code className="px-1.5 py-0.5 rounded text-[12px] font-mono text-foreground/80" style={{ background: "rgba(255,255,255,0.08)" }}>crewAIInc/crewAI</code>{" "}
                   на GitHub — он БЕСПЛАТНЫЙ (MIT-лицензия).{" "}
                   <SourceBadge n={1} />
                 </p>
               </li>
               <li className="flex gap-3">
-                <span className="shrink-0 w-6 h-6 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-mono text-[11px] font-bold text-primary mt-0.5">2</span>
+                <span className="shrink-0 w-6 h-6 rounded-full flex items-center justify-center font-mono text-[11px] font-bold text-primary mt-0.5" style={{ background: "rgba(234,56,87,0.10)", border: "1px solid rgba(234,56,87,0.20)" }}>2</span>
                 <p>
                   <strong>Коммерческий SaaS-сервис crewai.com</strong> (облако, UI, хостинг) — он ПЛАТНЫЙ (от ~$99/мес и выше).{" "}
                   <SourceBadge n={2} />
@@ -108,7 +161,7 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
 
             <ul className="space-y-2.5 list-none">
               {[
-                <><code className="bg-secondary px-1.5 py-0.5 rounded text-[12px] font-mono">pip install crewai</code> → бесплатный фреймворк у тебя локально. <SourceBadge n={1} /></>,
+                <><code className="px-1.5 py-0.5 rounded text-[12px] font-mono" style={{ background: "rgba(255,255,255,0.08)" }}>pip install crewai</code> → бесплатный фреймворк у тебя локально. <SourceBadge n={1} /></>,
                 <>Claude за 200$ → как сейчас, просто ещё один backend для агентов.</>,
                 <>Облачный crewai.com можешь вообще игнорировать, если всё крутится на твоём Mac mini / сервере.</>,
               ].map((item, i) => (
@@ -137,10 +190,10 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
               </button>
 
               {/* Sources count pill */}
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-card border border-border ml-1">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg ml-1" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)" }}>
                 <div className="flex -space-x-1">
-                  <div className="w-4 h-4 rounded-full bg-primary/30 border border-background" />
-                  <div className="w-4 h-4 rounded-full bg-primary/50 border border-background" />
+                  <div className="w-4 h-4 rounded-full border border-background" style={{ background: "rgba(234,56,87,0.4)" }} />
+                  <div className="w-4 h-4 rounded-full border border-background" style={{ background: "rgba(234,56,87,0.7)" }} />
                 </div>
                 <span className="font-mono text-[12px] text-muted-foreground">{mockSources.length} источников</span>
               </div>
@@ -159,23 +212,24 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
             </div>
           </div>
 
-          {/* Sources row */}
-          <div className="flex gap-2.5 overflow-x-auto pb-2 mb-6 scrollbar-hide">
+          {/* Sources row — compact */}
+          <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
             {mockSources.map((src) => (
               <div
                 key={src.num}
-                className="shrink-0 bg-card border border-border rounded-xl px-3.5 py-3 min-w-[140px] hover:border-primary/20 transition-colors cursor-pointer"
+                className="shrink-0 rounded-xl px-3 py-2.5 min-w-[110px] cursor-pointer transition-all hover:border-primary/30"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
               >
-                <div className="flex items-center gap-1.5 mb-2">
+                <div className="flex items-center gap-1.5 mb-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                  <span className="font-mono text-[10px] tracking-widest text-primary uppercase">
+                  <span className="font-mono text-[9px] tracking-widest text-primary uppercase">
                     {src.label}
                   </span>
                 </div>
-                <div className="font-mono text-[10px] text-muted-foreground/50 mb-2">{src.sub}</div>
-                <div className="space-y-1">
-                  <div className="h-[5px] bg-muted rounded-full w-full" />
-                  <div className="h-[5px] bg-muted rounded-full w-2/3" />
+                <div className="font-mono text-[9px] text-muted-foreground/40 mb-1.5">{src.sub}</div>
+                <div className="space-y-0.5">
+                  <div className="h-[4px] rounded-full w-full" style={{ background: "rgba(255,255,255,0.08)" }} />
+                  <div className="h-[4px] rounded-full w-2/3" style={{ background: "rgba(255,255,255,0.06)" }} />
                 </div>
               </div>
             ))}
@@ -183,7 +237,7 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
 
           {/* Follow-up suggestions */}
           <div className="mb-4">
-            <div className="font-mono text-[12px] font-bold tracking-widest uppercase text-muted-foreground mb-3">
+            <div className="font-mono text-[11px] font-bold tracking-widest uppercase text-muted-foreground/50 mb-3">
               Последующие действия
             </div>
             <div className="space-y-1.5">
@@ -191,14 +245,17 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
                 <button
                   key={i}
                   onClick={() => onSend(s.text)}
-                  className="w-full text-left flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-card border border-border hover:border-primary/25 hover:bg-primary/5 transition-all group"
+                  className="w-full text-left flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all group hover:border-primary/20"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
+                  onMouseEnter={e => (e.currentTarget.style.background = "rgba(234,56,87,0.04)")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <ArrowUpRight size={14} className="shrink-0 text-muted-foreground/50 group-hover:text-primary transition-colors" />
-                    <span className="text-[13px] text-foreground/80 truncate">{s.text}</span>
+                    <ArrowUpRight size={14} className="shrink-0 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+                    <span className="text-[13px] text-foreground/70 truncate group-hover:text-foreground transition-colors">{s.text}</span>
                   </div>
                   {s.tag && (
-                    <span className="shrink-0 flex items-center gap-1 text-[10px] font-mono text-muted-foreground/60 bg-secondary px-2 py-1 rounded-md">
+                    <span className="shrink-0 flex items-center gap-1 text-[10px] font-mono text-muted-foreground/50 px-2 py-1 rounded-md" style={{ background: "rgba(255,255,255,0.05)" }}>
                       <Sparkles size={10} className="text-primary/60" />
                       {s.tag}
                     </span>
@@ -210,10 +267,13 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
         </div>
       </div>
 
-      {/* Fixed bottom input — прибит к низу */}
+      {/* Fixed bottom input */}
       <div className="shrink-0 px-4 pb-4 pt-2 border-t border-white/5">
         <div className="flex items-center gap-2">
-          <button className="w-9 h-9 rounded-xl bg-card border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0">
+          <button
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+          >
             <Plus size={17} />
           </button>
           <div className="flex-1 glass-input rounded-xl px-4 py-2.5 flex items-center gap-2">

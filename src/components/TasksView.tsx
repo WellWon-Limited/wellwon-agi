@@ -139,7 +139,11 @@ const TaskCard = ({ task, onClick, compact }: { task: Task; onClick: () => void;
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left bg-card border-2 ${sta.border} rounded-2xl p-4 hover:bg-card/80 transition-all group active:scale-[0.99]`}
+      className="w-full text-left rounded-2xl p-4 transition-all group active:scale-[0.99] hover:border-primary/20"
+      style={{
+        background: "rgba(255,255,255,0.04)",
+        border: `1px solid ${task.status === "active" ? "rgba(234,56,87,0.18)" : "rgba(255,255,255,0.07)"}`,
+      }}
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -218,9 +222,12 @@ const AgentCard = ({ agent }: { agent: Agent }) => {
   };
 
   return (
-    <div className={`flex items-start gap-3 px-4 py-4 bg-card border-2 rounded-2xl transition-all cursor-pointer hover:border-primary/30 group ${
-      agent.status !== "idle" ? "border-primary/15" : "border-border"
-    }`}>
+    <div className={`flex items-start gap-3 px-4 py-4 rounded-2xl transition-all cursor-pointer hover:border-primary/30 group`}
+      style={{
+        background: agent.status !== "idle" ? "rgba(234,56,87,0.05)" : "rgba(255,255,255,0.04)",
+        border: agent.status !== "idle" ? "1px solid rgba(234,56,87,0.15)" : "1px solid rgba(255,255,255,0.07)",
+      }}
+    >
       <div className="relative shrink-0">
         <div className={`w-11 h-11 rounded-xl flex items-center justify-center font-mono text-[13px] font-bold border-2 ${agentColor[agent.id]}`}>
           {agent.avatar}
@@ -511,15 +518,37 @@ const TasksView = () => {
               </div>
             </div>
 
-            {/* Mobile: flat list */}
-            <div className="md:hidden flex-1 overflow-y-auto px-4 pb-6 space-y-3 scrollbar-hide">
-              {tasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onClick={() => setSelectedTask(selectedTask?.id === task.id ? null : task)}
-                />
-              ))}
+            {/* Mobile: horizontal kanban scroll */}
+            <div className="md:hidden flex-1 overflow-x-auto overflow-y-hidden px-4 pb-6 scrollbar-hide">
+              <div className="flex gap-3 h-full min-w-max">
+                {columns.map(({ status, tasks: colTasks }) => {
+                  const cfg = statusConfig[status];
+                  return (
+                    <div key={status} className="flex flex-col w-[260px] shrink-0 h-full">
+                      <div className="flex items-center gap-2 mb-3 px-1">
+                        {cfg.icon}
+                        <span className="font-mono text-[10px] tracking-widest uppercase text-muted-foreground font-bold">{cfg.label}</span>
+                        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded-lg text-muted-foreground" style={{ background: "rgba(255,255,255,0.06)" }}>{colTasks.length}</span>
+                      </div>
+                      <div className="flex-1 overflow-y-auto space-y-2.5 scrollbar-hide pr-1">
+                        {colTasks.map((task) => (
+                          <TaskCard
+                            key={task.id}
+                            task={task}
+                            compact
+                            onClick={() => setSelectedTask(selectedTask?.id === task.id ? null : task)}
+                          />
+                        ))}
+                        {colTasks.length === 0 && (
+                          <div className="flex flex-col items-center justify-center h-20 rounded-2xl border-2 border-dashed text-muted-foreground/30" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+                            <span className="font-mono text-[10px] tracking-widest uppercase">Пусто</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Task detail */}
@@ -571,7 +600,7 @@ const TasksView = () => {
                   { icon: <Search size={14} />, label: "Исследования", agent: "МАРК" },
                   { icon: <Filter size={14} />, label: "Приоритизация", agent: "JARVIS" },
                 ].map((cap, i) => (
-                  <div key={i} className="flex items-center gap-2.5 px-3 py-3 bg-card border-2 border-border rounded-2xl hover:border-primary/20 transition-all cursor-pointer">
+                  <div key={i} className="flex items-center gap-2.5 px-3 py-3 rounded-2xl hover:border-primary/20 transition-all cursor-pointer" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
                     <span className="text-primary">{cap.icon}</span>
                     <div>
                       <div className="text-[12px] text-foreground font-semibold">{cap.label}</div>
