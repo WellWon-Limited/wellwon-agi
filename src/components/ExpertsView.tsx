@@ -269,8 +269,8 @@ const ExpertsView = ({ onNavigate }: ExpertsViewProps) => {
             >
               <div className="flex items-center gap-4 mb-4">
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-[28px]"
-                  style={{ background: "rgba(0,0,0,0.2)" }}
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-[32px] shrink-0"
+                  style={{ background: "rgba(0,0,0,0.25)", border: `1px solid ${expert.border}` }}
                 >
                   {expert.icon}
                 </div>

@@ -16,6 +16,7 @@ import BriefsView from "@/components/BriefsView";
 import CapsulesView from "@/components/CapsulesView";
 import ExpertsView from "@/components/ExpertsView";
 import ProfileView from "@/components/ProfileView";
+import AnalyticsView from "@/components/AnalyticsView";
 import { useIsMobile } from "@/hooks/use-mobile";
 import avatarImg from "@/assets/avatar.jpg";
 import {
@@ -26,18 +27,19 @@ import {
 
 type View =
   | "home" | "chat" | "tasks" | "brain" | "more"
-  | "briefs" | "capsules" | "experts" | "profile";
+  | "briefs" | "capsules" | "experts" | "profile" | "analytics";
 
 // Top bar config for secondary views
 const topBarConfig: Partial<Record<View, { icon: React.ReactNode; title: string }>> = {
-  tasks:   { icon: <CheckSquare size={16} />, title: "ЗАДАЧИ" },
-  brain:   { icon: <Brain size={16} />, title: "BRAIN" },
-  home:    { icon: <Home size={16} />, title: "ГЛАВНАЯ" },
-  briefs:  { icon: <Sparkles size={16} />, title: "БРИФ" },
-  capsules:{ icon: <Package size={16} />, title: "КАПСУЛЫ" },
-  experts: { icon: <Users size={16} />, title: "ЭКСПЕРТЫ" },
-  profile: { icon: <User size={16} />, title: "ПРОФИЛЬ" },
-  more:    { icon: <BarChart2 size={16} />, title: "ЕЩЁ" },
+  tasks:     { icon: <CheckSquare size={16} />, title: "ЗАДАЧИ" },
+  brain:     { icon: <Brain size={16} />, title: "BRAIN" },
+  home:      { icon: <Home size={16} />, title: "ГЛАВНАЯ" },
+  briefs:    { icon: <Sparkles size={16} />, title: "БРИФ" },
+  capsules:  { icon: <Package size={16} />, title: "КАПСУЛЫ" },
+  experts:   { icon: <Users size={16} />, title: "ЭКСПЕРТЫ" },
+  profile:   { icon: <User size={16} />, title: "ПРОФИЛЬ" },
+  analytics: { icon: <BarChart2 size={16} />, title: "АНАЛИТИКА" },
+  more:      { icon: <BarChart2 size={16} />, title: "ЕЩЁ" },
 };
 
 const Index = () => {
@@ -189,6 +191,13 @@ const Index = () => {
               </div>
             )}
 
+            {/* ── ANALYTICS ── */}
+            {view === "analytics" && (
+              <div className="h-full overflow-hidden relative">
+                <AnalyticsView onNavigate={handleNavigate} />
+              </div>
+            )}
+
             {/* ── MORE ── */}
             {view === "more" && (
               <div className="h-full overflow-y-auto scrollbar-hide">
@@ -208,6 +217,11 @@ const Index = () => {
                       id: "experts", icon: <Users size={22} />, label: "Эксперты",
                       desc: "Каталог агентов и фоновые процессы", color: "text-violet-400",
                       bg: "rgba(183,124,255,0.10)", border: "rgba(183,124,255,0.20)"
+                    },
+                    {
+                      id: "analytics", icon: <BarChart2 size={22} />, label: "Аналитика",
+                      desc: "LLM расходы, задачи, эффективность", color: "text-blue-400",
+                      bg: "rgba(74,158,255,0.08)", border: "rgba(74,158,255,0.18)"
                     },
                     {
                       id: "settings", icon: <Settings2 size={22} />, label: "Настройки",

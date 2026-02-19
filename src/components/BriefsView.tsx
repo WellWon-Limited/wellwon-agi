@@ -77,7 +77,7 @@ const BriefsView = ({ onNavigate }: BriefsViewProps) => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-4 pb-8 space-y-4">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-4 pb-28 space-y-4">
 
         {/* ── MORNING BRIEF ── */}
         {activeTab === "morning" && (
