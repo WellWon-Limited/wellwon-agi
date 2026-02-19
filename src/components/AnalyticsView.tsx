@@ -1,8 +1,8 @@
 import {
-  LineChart, Line, XAxis, Tooltip, ResponsiveContainer,
-  BarChart, Bar, Cell
+  BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell,
+  PieChart, Pie
 } from "recharts";
-import { BarChart2, Zap, TrendingUp, Brain, Users, Clock, DollarSign, CheckCircle2 } from "lucide-react";
+import { BarChart2, Zap, Brain, Users, Clock, DollarSign, CheckCircle2, TrendingUp, Route } from "lucide-react";
 
 interface AnalyticsViewProps {
   onNavigate?: (view: string) => void;
@@ -19,9 +19,11 @@ const costData = [
 ];
 
 const modelBreakdown = [
-  { model: "Claude 3.7 Sonnet", cost: "$1.21", pct: 60, color: "#B77CFF" },
-  { model: "Gemini 3 Flash", cost: "$0.52", pct: 26, color: "#4A9EFF" },
-  { model: "GPT-4o mini", cost: "$0.28", pct: 14, color: "#10B981" },
+  { model: "Claude Sonnet", cost: "$1.21", pct: 54, color: "#B77CFF" },
+  { model: "Gemini Flash", cost: "$0.52", pct: 23, color: "#4A9EFF" },
+  { model: "Groq", cost: "$0.18", pct: 8, color: "#10B981" },
+  { model: "Embeddings", cost: "$0.26", pct: 12, color: "#F59E0B" },
+  { model: "Whisper", cost: "$0.07", pct: 3, color: "#FB7185" },
 ];
 
 const expertPerf = [
@@ -32,10 +34,16 @@ const expertPerf = [
 ];
 
 const memoryData = [
-  { label: "Zettels", value: 47, delta: "+5", color: "#ea3857" },
+  { label: "Zettels", value: 247, delta: "+5", color: "#ea3857" },
   { label: "Связей", value: 134, delta: "+12", color: "#4A9EFF" },
   { label: "Людей", value: 23, delta: "+2", color: "#10B981" },
   { label: "Идей", value: 18, delta: "+3", color: "#F59E0B" },
+];
+
+// Donut data: 79 done, 8 remaining
+const taskDonutData = [
+  { name: "Выполнено", value: 79, color: "#ea3857" },
+  { name: "Остаток", value: 8, color: "rgba(255,255,255,0.08)" },
 ];
 
 const AnalyticsView = ({ onNavigate: _onNavigate }: AnalyticsViewProps) => {
@@ -66,7 +74,7 @@ const AnalyticsView = ({ onNavigate: _onNavigate }: AnalyticsViewProps) => {
         <div className="grid grid-cols-4 gap-2">
           {[
             { icon: <DollarSign size={13} />, value: `$${totalWeekCost}`, label: "LLM неделя", color: "text-primary" },
-            { icon: <CheckCircle2 size={13} />, value: "91%", label: "Fast path", color: "text-emerald-400" },
+            { icon: <CheckCircle2 size={13} />, value: "89%", label: "Fast path", color: "text-emerald-400" },
             { icon: <Clock size={13} />, value: "1.4s", label: "Latency", color: "text-blue-400" },
             { icon: <Zap size={13} />, value: "47k", label: "Токенов", color: "text-violet-400" },
           ].map((s, i) => (
@@ -78,7 +86,7 @@ const AnalyticsView = ({ onNavigate: _onNavigate }: AnalyticsViewProps) => {
           ))}
         </div>
 
-        {/* LLM Costs chart */}
+        {/* LLM Costs — BAR CHART */}
         <div style={glassCard} className="px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -89,7 +97,7 @@ const AnalyticsView = ({ onNavigate: _onNavigate }: AnalyticsViewProps) => {
           </div>
 
           <ResponsiveContainer width="100%" height={100}>
-            <LineChart data={costData}>
+            <BarChart data={costData} barSize={22}>
               <XAxis
                 dataKey="day"
                 tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10, fontFamily: "monospace" }}
@@ -107,18 +115,17 @@ const AnalyticsView = ({ onNavigate: _onNavigate }: AnalyticsViewProps) => {
                 formatter={(v: number) => [`$${v.toFixed(2)}`, "Расход"]}
                 labelStyle={{ color: "rgba(255,255,255,0.5)" }}
                 itemStyle={{ color: "#ea3857" }}
+                cursor={{ fill: "rgba(255,255,255,0.03)" }}
               />
-              <Line
-                type="monotone"
-                dataKey="cost"
-                stroke="hsl(350,80%,57%)"
-                strokeWidth={2}
-                dot={{ fill: "hsl(350,80%,57%)", r: 3, strokeWidth: 0 }}
-                activeDot={{ r: 5 }}
-              />
-            </LineChart>
+              <Bar dataKey="cost" radius={[4, 4, 0, 0]}>
+                {costData.map((_, i) => (
+                  <Cell key={i} fill="hsl(350,80%,57%)" fillOpacity={0.75} />
+                ))}
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
 
+          {/* Model breakdown */}
           <div className="mt-4 space-y-2.5">
             {modelBreakdown.map((m, i) => (
               <div key={i}>
@@ -134,24 +141,72 @@ const AnalyticsView = ({ onNavigate: _onNavigate }: AnalyticsViewProps) => {
           </div>
         </div>
 
-        {/* Task Performance */}
-        <div style={glassCard} className="px-4 py-4">
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp size={14} className="text-emerald-400" />
-            <span className="font-mono text-[11px] tracking-widest uppercase text-foreground font-bold">Производительность задач</span>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { value: "23", label: "Выполнено за неделю", color: "text-emerald-400" },
-              { value: "91%", label: "Fast path %", color: "text-primary" },
-              { value: "1.4s", label: "Avg latency", color: "text-blue-400" },
-              { value: "47k", label: "Токенов / запрос", color: "text-violet-400" },
-            ].map((s, i) => (
-              <div key={i} className="px-4 py-3 rounded-2xl text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className={`font-mono text-[22px] font-black ${s.color}`}>{s.value}</div>
-                <div className="font-mono text-[9px] tracking-widest uppercase text-muted-foreground/50 leading-tight mt-0.5">{s.label}</div>
+        {/* 2-col: Routing + Tasks */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+
+          {/* Маршрутизация */}
+          <div style={glassCard} className="px-4 py-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Route size={14} className="text-emerald-400" />
+              <span className="font-mono text-[11px] tracking-widest uppercase text-foreground font-bold">Маршрутизация</span>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-mono text-[12px] text-foreground">Fast path</span>
+                  <span className="font-mono text-[14px] font-black text-emerald-400">89%</span>
+                </div>
+                <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div className="h-full rounded-full" style={{ width: "89%", background: "#10B981" }} />
+                </div>
               </div>
-            ))}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="font-mono text-[12px] text-foreground">Slow path</span>
+                  <span className="font-mono text-[14px] font-black text-primary">11%</span>
+                </div>
+                <div className="h-2.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <div className="h-full rounded-full" style={{ width: "11%", background: "hsl(350,80%,57%)" }} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Задачи — donut */}
+          <div style={glassCard} className="px-4 py-4">
+            <div className="flex items-center gap-2 mb-3">
+              <TrendingUp size={14} className="text-blue-400" />
+              <span className="font-mono text-[11px] tracking-widest uppercase text-foreground font-bold">Задачи</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative w-[72px] h-[72px] shrink-0">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={taskDonutData} cx="50%" cy="50%" innerRadius={24} outerRadius={34} dataKey="value" strokeWidth={0}>
+                      {taskDonutData.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="font-mono text-[13px] font-black text-foreground">79</span>
+                </div>
+              </div>
+              <div className="flex-1 space-y-1.5">
+                {[
+                  { label: "Всего", value: "87", color: "text-foreground" },
+                  { label: "Агенты", value: "52", color: "text-blue-400" },
+                  { label: "Ручные", value: "35", color: "text-muted-foreground" },
+                  { label: "Avg время", value: "2m 14s", color: "text-emerald-400" },
+                ].map((s, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <span className="font-mono text-[10px] text-muted-foreground/50">{s.label}</span>
+                    <span className={`font-mono text-[11px] font-bold ${s.color}`}>{s.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -177,36 +232,6 @@ const AnalyticsView = ({ onNavigate: _onNavigate }: AnalyticsViewProps) => {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Bar chart for tasks */}
-          <div className="mt-4">
-            <ResponsiveContainer width="100%" height={80}>
-              <BarChart data={expertPerf} barSize={24}>
-                <XAxis
-                  dataKey="name"
-                  tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 9, fontFamily: "monospace" }}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background: "rgba(20,20,30,0.95)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "12px",
-                    fontFamily: "monospace",
-                    fontSize: 11,
-                  }}
-                  formatter={(v: number) => [v, "задач"]}
-                  labelStyle={{ color: "rgba(255,255,255,0.5)" }}
-                />
-                <Bar dataKey="tasks" radius={[4, 4, 0, 0]}>
-                  {expertPerf.map((e, i) => (
-                    <Cell key={i} fill={e.color} fillOpacity={0.7} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
           </div>
         </div>
 

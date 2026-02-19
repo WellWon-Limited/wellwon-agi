@@ -1,8 +1,9 @@
 import { useState } from "react";
 import {
   Users, Bot, ChevronRight, Clock, Zap, Star,
-  TrendingUp, MessageSquare, CheckCircle2, RefreshCw,
-  ToggleLeft, ToggleRight, Calendar, BarChart2, Sparkles, PenLine, Target
+  MessageSquare, RefreshCw,
+  ToggleLeft, ToggleRight, BarChart2, Sparkles, PenLine, Target,
+  DollarSign, Code2, Scale, Plus
 } from "lucide-react";
 
 type ExpertTab = "experts" | "agents";
@@ -41,73 +42,108 @@ interface Agent {
 const experts: Expert[] = [
   {
     id: "e1",
-    name: "ЯРВИС",
-    role: "Оркестратор",
-    specialty: "Координация команды, приоритизация, стратегические решения",
-    icon: <Sparkles size={20} />,
-    tasksPerMonth: 142,
+    name: "Финансист",
+    role: "Финансовый директор",
+    specialty: "Финансовый анализ, бюджеты, инвестиции, P&L",
+    icon: <DollarSign size={20} />,
+    tasksPerMonth: 42,
     successRate: 97,
-    color: "text-primary",
-    bg: "rgba(234,56,87,0.10)",
-    border: "rgba(234,56,87,0.20)",
-    bio: "Главный оркестратор системы. Управляет командой специализированных агентов, распределяет задачи по capability-матрице и обеспечивает согласованность всех процессов.",
-    style: "Директивный, фокусированный на результате. Мыслит системно, предлагает альтернативы, не задаёт лишних вопросов.",
+    color: "text-emerald-400",
+    bg: "rgba(16,185,129,0.10)",
+    border: "rgba(16,185,129,0.20)",
+    bio: "Специализируется на финансовом анализе и стратегическом планировании. Анализирует P&L, строит прогнозы, контролирует бюджеты.",
+    style: "Точный, данные-ориентированный. Всегда со ссылками на метрики.",
     interactions: [
-      { date: "Сегодня", summary: "Приоритизировал 12 задач, назначил агентов, подготовил утренний бриф" },
-      { date: "Вчера", summary: "Координировал создание контент-плана, проверил аналитику рекламы" },
+      { date: "Сегодня", summary: "Подготовил финансовый отчёт Q1, выявил 3 зоны оптимизации" },
+      { date: "Вчера", summary: "Проанализировал ROI рекламных кампаний" },
     ],
   },
   {
     id: "e2",
-    name: "АННА",
-    role: "Контент-директор",
-    specialty: "Тексты, SMM, рассылки, редакционные планы, копирайтинг",
-    icon: <PenLine size={20} />,
-    tasksPerMonth: 58,
+    name: "Стратег",
+    role: "Стратегический директор",
+    specialty: "Стратегия, конкурентный анализ, рыночное позиционирование",
+    icon: <Sparkles size={20} />,
+    tasksPerMonth: 34,
     successRate: 94,
-    color: "text-rose-400",
-    bg: "rgba(251,113,133,0.10)",
-    border: "rgba(251,113,133,0.20)",
-    bio: "Специализируется на контентной стратегии и создании материалов для всех каналов коммуникации. Понимает TOV бренда и адаптирует голос под аудиторию.",
-    style: "Творческий, эмпатичный. Предлагает несколько вариантов, спрашивает о предпочтениях по тону.",
+    color: "text-primary",
+    bg: "rgba(234,56,87,0.10)",
+    border: "rgba(234,56,87,0.20)",
+    bio: "Главный оркестратор системы. Управляет командой, распределяет задачи, обеспечивает согласованность всех процессов.",
+    style: "Директивный, фокусированный на результате. Мыслит системно.",
     interactions: [
-      { date: "Сегодня", summary: "Создала 3 поста для Instagram, написала email-рассылку" },
-      { date: "2 дня назад", summary: "Подготовила редакционный план на февраль (28 публикаций)" },
+      { date: "Сегодня", summary: "Приоритизировал 12 задач, подготовил утренний бриф" },
+      { date: "Вчера", summary: "Координировал создание контент-плана" },
     ],
   },
   {
     id: "e3",
-    name: "МАРК",
-    role: "Аналитик данных",
-    specialty: "Рыночная аналитика, прогнозы, конкурентный анализ, отчёты",
-    icon: <BarChart2 size={20} />,
-    tasksPerMonth: 34,
+    name: "Маркетолог",
+    role: "CMO",
+    specialty: "Рекламные кампании, A/B тесты, ROAS, brand",
+    icon: <Target size={20} />,
+    tasksPerMonth: 58,
     successRate: 91,
-    color: "text-blue-400",
-    bg: "rgba(74,158,255,0.10)",
-    border: "rgba(74,158,255,0.20)",
-    bio: "Работает с данными: собирает, структурирует, анализирует и визуализирует. Специализируется на конкурентном анализе и построении прогностических моделей.",
-    style: "Точный, структурированный. Всегда даёт данные с источниками. Оговаривает допущения и ограничения.",
+    color: "text-violet-400",
+    bg: "rgba(183,124,255,0.10)",
+    border: "rgba(183,124,255,0.20)",
+    bio: "Управляет платным трафиком и оптимизирует конверсии. Работает с Яндекс, VK, Instagram.",
+    style: "Data-driven, методичный. Предлагает гипотезы с обоснованием.",
     interactions: [
-      { date: "Сегодня", summary: "Завершает анализ конкурентов Q1 2026 (70% готовности)" },
-      { date: "Неделю назад", summary: "Подготовил прогноз ROAS по рекламным кампаниям" },
+      { date: "3 дня назад", summary: "Оптимизировала кампании, ROAS вырос с 2.1 до 3.4" },
     ],
   },
   {
     id: "e4",
-    name: "ЕЛЕНА",
-    role: "Маркетолог",
-    specialty: "Рекламные кампании, A/B тесты, ROAS оптимизация",
-    icon: <Target size={20} />,
+    name: "Коуч",
+    role: "Бизнес-коуч",
+    specialty: "Личная эффективность, декомпозиция целей, фокус",
+    icon: <PenLine size={20} />,
     tasksPerMonth: 22,
     successRate: 89,
-    color: "text-violet-400",
-    bg: "rgba(183,124,255,0.10)",
-    border: "rgba(183,124,255,0.20)",
-    bio: "Управляет платным трафиком и оптимизирует конверсии. Работает с Яндекс, VK, Instagram. Специалист по A/B тестированию.",
-    style: "Data-driven, методичный. Предлагает гипотезы с обоснованием, отчитывается по метрикам.",
+    color: "text-amber-400",
+    bg: "rgba(251,191,36,0.10)",
+    border: "rgba(251,191,36,0.20)",
+    bio: "Помогает структурировать цели и повышать личную эффективность. Специализируется на декомпозиции сложных задач.",
+    style: "Эмпатичный, вдохновляющий. Задаёт правильные вопросы.",
     interactions: [
-      { date: "3 дня назад", summary: "Оптимизировала кампании, ROAS вырос с 2.1 до 3.4" },
+      { date: "Сегодня", summary: "Провёл утренний check-in, помог расставить приоритеты дня" },
+      { date: "2 дня назад", summary: "Декомпозировал квартальные цели на недельные спринты" },
+    ],
+  },
+  {
+    id: "e5",
+    name: "Юрист",
+    role: "Legal Counsel",
+    specialty: "Договоры, риски, compliance, интеллектуальная собственность",
+    icon: <Scale size={20} />,
+    tasksPerMonth: 18,
+    successRate: 96,
+    color: "text-orange-400",
+    bg: "rgba(251,146,60,0.10)",
+    border: "rgba(251,146,60,0.20)",
+    bio: "Специализируется на правовой защите бизнеса: договоры, риски, compliance, IP. Предупреждает юридические проблемы до их возникновения.",
+    style: "Точный, консервативный. Всегда указывает на риски и альтернативы.",
+    interactions: [
+      { date: "Вчера", summary: "Проверил договор с партнёром, выявил 2 критических пункта" },
+    ],
+  },
+  {
+    id: "e6",
+    name: "Разработчик",
+    role: "CTO / Tech Lead",
+    specialty: "Код, архитектура, API-интеграции, автоматизация",
+    icon: <Code2 size={20} />,
+    tasksPerMonth: 31,
+    successRate: 93,
+    color: "text-cyan-400",
+    bg: "rgba(34,211,238,0.10)",
+    border: "rgba(34,211,238,0.20)",
+    bio: "Решает технические задачи: пишет код, проектирует архитектуру, интегрирует API, автоматизирует процессы.",
+    style: "Прагматичный, решение-ориентированный. Предлагает несколько технических вариантов.",
+    interactions: [
+      { date: "Сегодня", summary: "Настраивает интеграцию CRM через Bitrix24 API" },
+      { date: "3 дня назад", summary: "Автоматизировал сбор аналитики через Python-скрипт" },
     ],
   },
 ];
@@ -182,69 +218,74 @@ const ExpertsView = ({ onNavigate }: ExpertsViewProps) => {
 
   return (
     <div className="h-full flex flex-col bg-background overflow-hidden">
-      {/* Tabs */}
+      {/* Tabs + Add button */}
       <div className="shrink-0 px-4 pt-20 pb-3">
-        <div
-          className="flex items-center p-1"
-          style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", borderRadius: "100px" }}
-        >
-          {([
-            { id: "experts", label: "Эксперты", icon: <Users size={13} /> },
-            { id: "agents", label: "Агенты", icon: <Bot size={13} /> },
-          ] as { id: ExpertTab; label: string; icon: React.ReactNode }[]).map(tab => (
+        <div className="flex items-center gap-2 mb-3">
+          <div
+            className="flex items-center p-1 flex-1"
+            style={{ background: "rgba(255,255,255,0.05)", backdropFilter: "blur(16px)", borderRadius: "100px" }}
+          >
+            {([
+              { id: "experts", label: "Эксперты", icon: <Users size={13} /> },
+              { id: "agents", label: "Агенты", icon: <Bot size={13} /> },
+            ] as { id: ExpertTab; label: string; icon: React.ReactNode }[]).map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => { setActiveTab(tab.id); setSelectedExpert(null); }}
+                className="flex items-center gap-1.5 px-4 py-2.5 font-mono text-[11px] tracking-widest uppercase transition-all rounded-full flex-1 justify-center"
+                style={activeTab === tab.id ? {
+                  background: "hsl(var(--primary))",
+                  color: "hsl(var(--primary-foreground))",
+                  fontWeight: 700,
+                } : { color: "rgba(255,255,255,0.4)" }}
+              >
+                {tab.icon}
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+          {activeTab === "experts" && !expert && (
             <button
-              key={tab.id}
-              onClick={() => { setActiveTab(tab.id); setSelectedExpert(null); }}
-              className="flex items-center gap-1.5 px-4 py-2.5 font-mono text-[11px] tracking-widest uppercase transition-all rounded-full flex-1 justify-center"
-              style={activeTab === tab.id ? {
-                background: "hsl(var(--primary))",
-                color: "hsl(var(--primary-foreground))",
-                fontWeight: 700,
-              } : { color: "rgba(255,255,255,0.4)" }}
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-full font-mono text-[11px] tracking-widest uppercase text-primary shrink-0 transition-opacity hover:opacity-80"
+              style={{ background: "rgba(234,56,87,0.12)", border: "1px solid rgba(234,56,87,0.22)" }}
             >
-              {tab.icon}
-              <span>{tab.label}</span>
+              <Plus size={12} /> Add
             </button>
-          ))}
+          )}
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto scrollbar-hide px-4 pb-8">
 
-        {/* EXPERTS LIST */}
+        {/* EXPERTS GRID 2 cols */}
         {activeTab === "experts" && !expert && (
-          <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
             {experts.map(e => (
               <button
                 key={e.id}
                 onClick={() => setSelectedExpert(e.id)}
-                className="w-full text-left px-4 py-4 rounded-2xl hover:bg-white/5 transition-all active:scale-[0.99]"
-                style={glassCard}
+                className="text-left px-3 py-4 rounded-2xl hover:opacity-90 transition-all active:scale-[0.98] flex flex-col"
+                style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${e.border}`, borderLeft: `3px solid ${e.border.replace("0.20", "0.60")}` }}
               >
-                <div className="flex items-start gap-4">
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-[20px] shrink-0"
-                    style={{ background: e.bg, border: `1px solid ${e.border}` }}
-                  >
-                    {e.icon}
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 shrink-0"
+                  style={{ background: e.bg, border: `1px solid ${e.border}` }}
+                >
+                  <span className={e.color}>{e.icon}</span>
+                </div>
+                <div className={`font-mono text-[13px] font-black tracking-widest mb-0.5 ${e.color}`}>{e.name}</div>
+                <div className="font-mono text-[10px] text-muted-foreground/50 mb-2 leading-snug">{e.role}</div>
+                <div className="mt-auto space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[9px] text-muted-foreground/40">задач/мес</span>
+                    <span className="font-mono text-[11px] font-bold text-foreground">{e.tasksPerMonth}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <span className={`font-mono text-[14px] font-black tracking-widest ${e.color}`}>{e.name}</span>
-                      <ChevronRight size={14} className="text-muted-foreground/30" />
-                    </div>
-                    <div className="font-mono text-[11px] text-muted-foreground/60 mb-2">{e.role}</div>
-                    <p className="text-[12px] text-foreground/60 leading-snug line-clamp-2 mb-3">{e.specialty}</p>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1.5">
-                        <Zap size={10} className="text-muted-foreground/40" />
-                        <span className="font-mono text-[10px] text-muted-foreground/50">{e.tasksPerMonth} задач/мес</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Star size={10} className="text-amber-400/60" />
-                        <span className="font-mono text-[10px] text-amber-400/70">{e.successRate}% успех</span>
-                      </div>
-                    </div>
+                  <div className="h-1 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                    <div className="h-full rounded-full" style={{ width: `${e.successRate}%`, background: e.border.replace("0.20", "0.80") }} />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-[9px] text-muted-foreground/40">успех</span>
+                    <span className={`font-mono text-[11px] font-bold ${e.color}`}>{e.successRate}%</span>
                   </div>
                 </div>
               </button>

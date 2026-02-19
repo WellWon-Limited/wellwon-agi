@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   Sun, ChevronRight, Clock, Package, Lightbulb,
   CheckSquare, Zap, Mic, Plus, X, Check, ArrowRight,
-  TrendingUp, Brain, Sparkles
+  TrendingUp, Brain, Sparkles, Star, Bell, Play
 } from "lucide-react";
 
 interface DashboardViewProps {
@@ -146,6 +146,12 @@ const DashboardView = ({ onNavigate }: DashboardViewProps) => {
                 <span className={`flex-1 text-[13px] leading-snug ${task.done ? "line-through text-muted-foreground/40" : "text-foreground"}`}>
                   {task.title}
                 </span>
+                {/* Star priority */}
+                <div className="flex items-center gap-0.5 shrink-0">
+                  {Array.from({ length: task.priority === "critical" ? 3 : task.priority === "high" ? 3 : task.priority === "medium" ? 2 : 1 }).map((_, i) => (
+                    <Star key={i} size={9} className="text-amber-400" fill="currentColor" />
+                  ))}
+                </div>
                 {task.agent && (
                   <span className="font-mono text-[9px] tracking-widest uppercase px-1.5 py-0.5 rounded-md text-primary border border-primary/25" style={{ background: "rgba(234,56,87,0.08)" }}>
                     {task.agent}
@@ -171,16 +177,19 @@ const DashboardView = ({ onNavigate }: DashboardViewProps) => {
             </button>
           </div>
           <div className="space-y-2">
-            {activeCapsules.map((cap) => (
-              <div key={cap.id} className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                <div className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
-                <span className="flex-1 text-[13px] text-foreground">{cap.title}</span>
-                <div className="flex items-center gap-1 shrink-0">
-                  <Clock size={10} className="text-muted-foreground/40" />
-                  <span className="font-mono text-[10px] text-muted-foreground/50">{cap.trigger}</span>
+            {activeCapsules.map((cap) => {
+              const capsuleIcon = cap.type === "check" ? <CheckSquare size={13} className="text-primary" /> : cap.type === "remind" ? <Bell size={13} className="text-emerald-400" /> : <Play size={13} className="text-blue-400" />;
+              return (
+                <div key={cap.id} className="flex items-center gap-3 px-3 py-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  {capsuleIcon}
+                  <span className="flex-1 text-[13px] text-foreground">{cap.title}</span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Clock size={10} className="text-muted-foreground/40" />
+                    <span className="font-mono text-[10px] text-muted-foreground/50">{cap.trigger}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
