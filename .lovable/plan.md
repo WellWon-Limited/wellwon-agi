@@ -1,71 +1,146 @@
 
-# Удаление всех эмодзи из кодовой базы
+# Дошлифовка приложения — детальный дизайн-аудит и план итераций
 
-## Что найдено
+## Итоги аудита: что найдено по каждому экрану
 
-### ProfileView.tsx — объект `traits` (строки 47–59)
-Эмодзи используются как `icon` поля в данных и рендерятся через `<span className="text-[18px]">{t.icon}</span>`
+### Проблема 1 — Dashboard: FAB перекрывает контент
+`bottom-20` (80px) от низа — FAB закрывает последнюю карточку. Нижняя навигация ~65px + safe area. Нужно `bottom-[88px]`.
 
-| Эмодзи | Заменить на |
-|---|---|
-| `🧠` (Системное мышление) | `<Brain size={16} />` |
-| `⚡` (Инициативность) | `<Zap size={16} />` |
-| `🔍` (Рефлексия) | `<Search size={16} />` |
-| `📊` (Данные) | `<BarChart2 size={16} />` |
-| `✦` (Перфекционизм) | `<Sparkles size={16} />` |
-| `🚀` (Автономность) | `<ArrowUpRight size={16} />` |
-| `🌙` (Творческие блоки) | `<Moon size={16} />` |
-| `☀` (Пик энергии) | `<Sun size={16} />` |
+Также: карточки в Quick Stats слишком плотные — текст `text-[9px]` почти нечитаем.
 
-Изменение в данных: `icon: "🧠"` → `icon: <Brain size={16} />` (тип `React.ReactNode`)
+### Проблема 2 — Chat List: нет разбивки по датам
+Весь список одним потоком без группировки. По дизайн-стандартам мессенджеров: "Сегодня / Вчера / Эта неделя / Ранее". Добавить sticky-заголовки.
 
-Рендер уже корректный — достаточно поменять тип и значения.
+### Проблема 3 — Chat Detail: выглядит старо
+- `bg-card border border-border` — не соответствует остальному glass-стилю
+- Сообщение пользователя использует обычный card, а не glass
+- `WellWon AI` — название устарело, должно быть JARVIS
+- Sources row: карточки источников слишком широкие (min-w-[140px]) — надо компактнее
+- Follow-up suggestions: `bg-card border border-border` — несоответствие теме
+- Bottom input: `bg-card border border-border/40` кнопка Plus — несоответствие
 
-### ExpertsView.tsx — поле `icon` в экспертах (строки 43, 62, 79, 97)
-Иконка рендерится через `<div className="...text-[20px]">{e.icon}</div>`
+### Проблема 4 — Tasks: kanban без визуального разграничения колонок
+- Все задачи в одном вертикальном списке — не ясно какой статус у какой
+- Нет горизонтального scroll по Kanban-колонкам (как задумано)
+- Счётчик задач в шапке колонок не виден на мобиле
+- `bg-card border border-border` у карточек не соответствует glass-теме
 
-| Эксперт | Эмодзи | Заменить на |
-|---|---|---|
-| ЯРВИС | `✦` | `<Sparkles size={20} />` |
-| АННА | `✍` | `<PenLine size={20} />` |
-| МАРК | `📊` | `<BarChart2 size={20} />` |
-| ЕЛЕНА | `🎯` | `<Target size={20} />` |
+### Проблема 5 — Brain: Inbox без разбивки на группы
+Inbox просто горизонтальный список. Нет группировки "Сегодня / Вчера". Плюс input для новой заметки перекрывается FAB-кнопкой (нет FAB в BrainView, но нижняя nav мешает).
 
-Тип `icon: string` → `icon: React.ReactNode`, рендер уже через `{e.icon}`.
+### Проблема 6 — Briefs: нет прокрутки утреннего брифа до конца
+`pb-8` при высоте 100dvh — Dream State карточка обрезается навбаром. Нужно `pb-24`.
 
-### DiscoverView.tsx — строка 76
-```tsx
-<span className="text-[13px] text-muted-foreground">✦ {article.source}</span>
-```
-Заменить `✦` на `<Sparkles size={11} className="inline mr-1" />` или просто убрать символ.
+### Проблема 7 — Capsules: TopBar отображает "КАПСУЛЫ" но Detail-экран тоже под ним
+В CapsuleDetail нет кнопки выхода (Back) привязанной к топ-бару — кнопка "Назад" в теле страницы, что неконсистентно.
 
-### BrainView.tsx — строка 169
-```tsx
-✓ Готово
-```
-Заменить на `<Check size={10} /> Готово` (иконка `Check` из lucide-react уже импортирована).
+### Проблема 8 — Experts: Detail-карточка эксперта выглядит как список, не как профиль
+Блок с иконкой эксперта 16x16 → нужен w-20 h-20, имя крупнее.
 
-## Технические изменения
+### Проблема 9 — Profile: Radar Chart обрезается на мобиле
+`height={240}` + margins съедают пространство. Нужен `height={220}` и убрать внешние margin.
+
+### Проблема 10 — More: отсутствует персональный раздел "Профиль" в меню "Ещё"
+Профиль теперь отдельная вкладка в Bottom Nav — но в More меню его нет, и нет Analytics.
+
+### Проблема 11 — Глобально: несоответствие стиля в Chat vs остальные экраны
+ChatResponseView использует `bg-card border border-border` везде, а все остальные экраны используют `rgba(255,255,255,0.04) + rgba(255,255,255,0.07)`. Нужно унифицировать.
+
+### Проблема 12 — MobileBottomNav: 6 пунктов не помещаются комфортно
+Сейчас 6 вкладок (Home, Chat, Brain, Tasks, Profile, More) — на маленьких экранах 320–375px они сжимаются до нечитаемых. Нужно или убрать подписи у некоторых, или сократить до 5.
+
+---
+
+## Итерация 1 — Глобальная унификация стиля
+
+### ChatResponseView.tsx
+- Сообщение пользователя: заменить `bg-card border border-border` → glass-стиль `rgba(255,255,255,0.07)`
+- JARVIS шапка: переименовать `WellWon AI` → `JARVIS` + добавить цветной badge типа "Slow path"
+- Follow-up cards: `bg-card border border-border` → `rgba(255,255,255,0.04)` + `rgba(255,255,255,0.07)`
+- Sources mini-cards: уменьшить `min-w-[140px]` → `min-w-[110px]`, компактнее
+
+### TasksView.tsx
+- Task cards: заменить `bg-card border border-border` → glass card style
+- Добавить горизонтальный scroll для Kanban-колонок (обернуть в `flex overflow-x-auto`)
+- Каждая колонка `w-72 shrink-0`
+
+### MobileChatList.tsx
+- Добавить sticky-группировки по датам: "Сегодня", "Вчера", "Эта неделя"
+- Каждый элемент списка: убрать hover `bg-card/30` → `rgba(255,255,255,0.03)`
+
+---
+
+## Итерация 2 — UX и читаемость
+
+### DashboardView.tsx
+- FAB: изменить `bottom-20` → `bottom-[88px]`
+- Quick Stats: увеличить `text-[9px]` → `text-[10px]`, добавить `leading-tight`
+- Brief Card: добавить реальную дату (через `new Date().toLocaleDateString`)
+
+### BriefsView.tsx
+- `pb-8` → `pb-28` чтобы Dream State карточка не обрезалась навбаром
 
 ### ProfileView.tsx
-1. Добавить импорты: `Search, BarChart2, Moon, Zap` (часть уже есть — проверить)
-2. Изменить тип `icon` в `traits`: `icon: string` → `icon: React.ReactNode`
-3. Заменить 8 строк с эмодзи на JSX-элементы
+- Radar Chart: `height={240}` → `height={200}`, убрать `margin`
+
+### CapsulesView.tsx
+- CapsuleDetail: кнопка "Назад" переехать в floating-pill поверх контента (как в других экранах)
 
 ### ExpertsView.tsx
-1. Добавить импорты: `PenLine, Target` (Sparkles, BarChart2 — проверить наличие)
-2. Изменить тип `icon: string` → `icon: React.ReactNode` в интерфейсе `Expert`
-3. Заменить 4 строки с эмодзи
+- Expert icon в Detail: `w-16 h-16` → `w-20 h-20`
 
-### DiscoverView.tsx
-1. Добавить импорт `Sparkles` если не импортирован
-2. Заменить `✦` на иконку
+---
 
-### BrainView.tsx
-1. Заменить `✓ Готово` на `<Check size={10} /> Готово` (Check уже импортирован)
+## Итерация 3 — Новые компоненты
 
-## Файлы к изменению
-- `src/components/ProfileView.tsx`
-- `src/components/ExpertsView.tsx`
-- `src/components/DiscoverView.tsx`
-- `src/components/BrainView.tsx`
+### AnalyticsView.tsx (новый файл)
+Полноценный экран аналитики, который давно запланирован.
+
+Секции:
+1. **LLM Costs** — LineChart за 7 дней (recharts), под ним breakdown по моделям (прогресс-бары)
+2. **Task Performance** — grid: задач выполнено / fast path % / avg latency / tokens используемых
+3. **Expert Performance** — рейтинг агентов с success rate bar
+4. **Memory Growth** — Zettels / Links / People / Ideas с delta за неделю
+
+Добавить в Index.tsx:
+```
+type View = ... | "analytics"
+import AnalyticsView
+{view === "analytics" && <AnalyticsView onNavigate={handleNavigate} />}
+```
+
+Добавить в More:
+```
+{ id: "analytics", icon: <BarChart2 />, label: "Аналитика", desc: "LLM расходы, задачи, эффективность", color: "text-blue-400" }
+```
+
+### Chain of Thought в ChatResponseView.tsx
+Добавить collapsible CoT panel над ответом JARVIS:
+- Кнопка-пилюля `[Chain of Thought ▼]` под "Проверено N источников"
+- При открытии показывает timeline: Router (0.2s) → CEO → Expert → Synthesis
+- Каждый шаг: иконка + название + время
+
+---
+
+## Технические детали по файлам
+
+| Файл | Что меняется | Приоритет |
+|---|---|---|
+| `ChatResponseView.tsx` | glass-style cards, JARVIS brand, CoT panel | Высокий |
+| `TasksView.tsx` | horizontal Kanban scroll, glass cards | Высокий |
+| `MobileChatList.tsx` | date grouping, unified hover style | Средний |
+| `DashboardView.tsx` | FAB position, stats font size, live date | Средний |
+| `BriefsView.tsx` | padding bottom fix | Низкий |
+| `ProfileView.tsx` | radar chart height | Низкий |
+| `ExpertsView.tsx` | icon size in detail | Низкий |
+| `CapsulesView.tsx` | back button consistency | Низкий |
+| `AnalyticsView.tsx` | новый файл | Средний |
+| `Index.tsx` | добавить analytics view + route | Средний |
+
+## Порядок реализации
+
+1. Итерация 1: ChatResponseView + TasksView + MobileChatList (стиль)
+2. Итерация 2: Dashboard FAB + Briefs padding + Profile chart + мелкие UX
+3. Итерация 3: AnalyticsView + CoT Panel + Index routing
+
+Все три итерации реализуются последовательно в одном прогоне без остановок.
