@@ -3,18 +3,19 @@ import {
   Inbox, Network, Users, Lightbulb, Search, Mic,
   ChevronRight, X, Check, ArrowRight, Tag, Link2,
   Clock, Star, ArrowUpRight, MoreHorizontal, Plus,
-  Zap, Sparkles, Heart, Briefcase, GraduationCap
+  Zap, Sparkles, Heart, Briefcase, GraduationCap,
+  MessageSquare, CheckSquare, Globe
 } from "lucide-react";
 
 type BrainTab = "inbox" | "zettel" | "people" | "ideas";
 
 /* ─── Mock Data ─── */
 const inboxItems = [
-  { id: "1", text: "Нужно подготовить презентацию для инвесторов на следующей неделе", time: "2 мин назад", processed: false },
-  { id: "2", text: "Идея: сделать рассылку по базе клиентов с новым оффером перед Q2", time: "14 мин назад", processed: false },
-  { id: "3", text: "Посмотри кейс конкурента — они запустили новый продукт на Product Hunt", time: "1 ч назад", processed: false },
-  { id: "4", text: "Надо разобраться с подпиской на Notion — скоро истекает", time: "3 ч назад", processed: true },
-  { id: "5", text: "Прочитать: «Thinking, Fast and Slow» — ключевые главы о когнитивных искажениях", time: "вчера", processed: true },
+  { id: "1", text: "Нужно подготовить презентацию для инвесторов на следующей неделе", time: "2 мин назад", processed: false, type: "task", source: "manual" },
+  { id: "2", text: "Идея: сделать рассылку по базе клиентов с новым оффером перед Q2", time: "14 мин назад", processed: false, type: "thought", source: "voice", tag: "Q2 маркетинг" },
+  { id: "3", text: "Посмотри кейс конкурента — они запустили новый продукт на Product Hunt", time: "1 ч назад", processed: false, type: "link", source: "chat", tag: "конкуренты" },
+  { id: "4", text: "Надо разобраться с подпиской на Notion — скоро истекает", time: "3 ч назад", processed: true, type: "task", source: "manual" },
+  { id: "5", text: "Прочитать: «Thinking, Fast and Slow» — ключевые главы о когнитивных искажениях", time: "вчера", processed: true, type: "note", source: "manual" },
 ];
 
 const zettels = [
@@ -58,6 +59,20 @@ interface BrainViewProps {
   onNavigate?: (view: string) => void;
 }
 
+const typeBadge: Record<string, { label: string; color: string; bg: string }> = {
+  task: { label: "задача", color: "text-blue-400", bg: "rgba(74,158,255,0.12)" },
+  thought: { label: "мысль", color: "text-violet-400", bg: "rgba(183,124,255,0.12)" },
+  link: { label: "ссылка", color: "text-emerald-400", bg: "rgba(16,185,129,0.12)" },
+  note: { label: "заметка", color: "text-amber-400", bg: "rgba(251,191,36,0.12)" },
+  chat: { label: "чат", color: "text-primary", bg: "rgba(234,56,87,0.12)" },
+};
+
+const sourceBadge: Record<string, { label: string }> = {
+  manual: { label: "вручную" },
+  voice: { label: "голос" },
+  chat: { label: "из чата" },
+};
+
 const BrainView = ({ onNavigate }: BrainViewProps) => {
   const [activeTab, setActiveTab] = useState<BrainTab>("inbox");
   const [selectedZettel, setSelectedZettel] = useState<string | null>(null);
@@ -65,6 +80,7 @@ const BrainView = ({ onNavigate }: BrainViewProps) => {
   const [swipeIdx, setSwipeIdx] = useState(0);
   const [swipeDir, setSwipeDir] = useState<null | "left" | "right">(null);
   const [inboxItems_, setInboxItems] = useState(inboxItems);
+  const [fabOpen, setFabOpen] = useState(false);
 
   const tabs: { id: BrainTab; label: string; icon: React.ReactNode; count?: number }[] = [
     { id: "inbox", label: "Инбокс", icon: <Inbox size={13} />, count: inboxItems_.filter(i => !i.processed).length },
@@ -134,51 +150,67 @@ const BrainView = ({ onNavigate }: BrainViewProps) => {
         {/* INBOX */}
         {activeTab === "inbox" && (
           <div className="space-y-2">
-            {inboxItems_.map((item) => (
-              <div
-                key={item.id}
-                className={`flex items-start gap-3 px-4 py-4 rounded-2xl transition-all ${item.processed ? "opacity-50" : ""}`}
-                style={{
-                  background: item.processed ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.04)",
-                  border: `1px solid ${item.processed ? "rgba(255,255,255,0.04)" : "rgba(234,56,87,0.15)"}`,
-                }}
-              >
-                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.processed ? "bg-muted-foreground/30" : "bg-primary animate-pulse"}`} />
-                <div className="flex-1 min-w-0">
-                  <p className={`text-[13px] leading-snug mb-1.5 ${item.processed ? "line-through text-muted-foreground/40" : "text-foreground"}`}>
-                    {item.text}
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-[10px] text-muted-foreground/40">{item.time}</span>
-                    {!item.processed && (
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md text-emerald-400 hover:opacity-80 transition-opacity"
-                          style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}
-                          onClick={() => setActiveTab("zettel")}
-                        >
-                          → Zettel
-                        </button>
-                        <button
-                          className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md text-blue-400 hover:opacity-80 transition-opacity"
-                          style={{ background: "rgba(74,158,255,0.1)", border: "1px solid rgba(74,158,255,0.2)" }}
-                          onClick={() => onNavigate?.("tasks")}
-                        >
-                          → Задача
-                        </button>
-                        <button
-                          className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md text-muted-foreground/50 hover:opacity-80 transition-opacity"
-                          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
-                          onClick={() => setInboxItems(prev => prev.map(i => i.id === item.id ? { ...i, processed: true } : i))}
-                        >
-                          <Check size={10} className="inline mr-0.5" /> Готово
-                        </button>
-                      </div>
-                    )}
+            {inboxItems_.map((item) => {
+              const tb = typeBadge[item.type] || typeBadge.note;
+              const sb = sourceBadge[item.source] || sourceBadge.manual;
+              return (
+                <div
+                  key={item.id}
+                  className={`flex items-start gap-3 px-4 py-4 rounded-2xl transition-all ${item.processed ? "opacity-50" : ""}`}
+                  style={{
+                    background: item.processed ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.04)",
+                    border: `1px solid ${item.processed ? "rgba(255,255,255,0.04)" : "rgba(234,56,87,0.15)"}`,
+                  }}
+                >
+                  <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.processed ? "bg-muted-foreground/30" : "bg-primary animate-pulse"}`} />
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-[13px] leading-snug mb-2 ${item.processed ? "line-through text-muted-foreground/40" : "text-foreground"}`}>
+                      {item.text}
+                    </p>
+                    {/* Type + source badges */}
+                    <div className="flex items-center gap-1.5 mb-2 flex-wrap">
+                      <span className="font-mono text-[9px] tracking-widest uppercase px-1.5 py-0.5 rounded-md" style={{ background: tb.bg, color: tb.color.replace("text-", "") }}>
+                        <span className={tb.color}>{tb.label}</span>
+                      </span>
+                      <span className="font-mono text-[9px] text-muted-foreground/40">{sb.label}</span>
+                      {item.tag && (
+                        <span className="flex items-center gap-0.5 font-mono text-[9px] text-amber-400/70 px-1.5 py-0.5 rounded-md" style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.15)" }}>
+                          <Star size={8} fill="currentColor" /> {item.tag}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] text-muted-foreground/40">{item.time}</span>
+                      {!item.processed && (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md text-emerald-400 hover:opacity-80 transition-opacity"
+                            style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}
+                            onClick={() => setActiveTab("zettel")}
+                          >
+                            → Zettel
+                          </button>
+                          <button
+                            className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md text-blue-400 hover:opacity-80 transition-opacity"
+                            style={{ background: "rgba(74,158,255,0.1)", border: "1px solid rgba(74,158,255,0.2)" }}
+                            onClick={() => onNavigate?.("tasks")}
+                          >
+                            → Задача
+                          </button>
+                          <button
+                            className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-md text-muted-foreground/50 hover:opacity-80 transition-opacity"
+                            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                            onClick={() => setInboxItems(prev => prev.map(i => i.id === item.id ? { ...i, processed: true } : i))}
+                          >
+                            <Check size={10} className="inline mr-0.5" /> Готово
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
             {/* Input */}
             <div className="glass-input rounded-2xl px-4 py-3 flex items-center gap-3 mt-2">
@@ -524,8 +556,44 @@ const BrainView = ({ onNavigate }: BrainViewProps) => {
           </div>
         )}
       </div>
+
+      {/* FAB — раскрывается в 4 опции */}
+      <div className="fixed bottom-[88px] right-4 z-20 flex flex-col items-end gap-2">
+        {fabOpen && (
+          <div className="flex flex-col items-end gap-2 mb-1">
+            {[
+              { icon: <Mic size={15} />, label: "Голосовая", color: "text-primary", action: () => {} },
+              { icon: <Lightbulb size={15} />, label: "Идея", color: "text-amber-400", action: () => setActiveTab("ideas") },
+              { icon: <CheckSquare size={15} />, label: "Задача", color: "text-emerald-400", action: () => { setFabOpen(false); onNavigate?.("tasks"); } },
+              { icon: <MessageSquare size={15} />, label: "Чат", color: "text-blue-400", action: () => { setFabOpen(false); onNavigate?.("chat"); } },
+            ].map((item, i) => (
+              <button
+                key={i}
+                onClick={() => { item.action(); setFabOpen(false); }}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-full hover:opacity-90 transition-all"
+                style={{ background: "rgba(255,255,255,0.10)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.12)" }}
+              >
+                <span className="font-mono text-[11px] tracking-widest uppercase text-muted-foreground/70">{item.label}</span>
+                <span className={item.color}>{item.icon}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        <button
+          onClick={() => setFabOpen(!fabOpen)}
+          className="w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+          style={{
+            background: fabOpen ? "rgba(255,255,255,0.12)" : "hsl(var(--primary))",
+            backdropFilter: "blur(20px)",
+            boxShadow: "0 8px 32px rgba(234,56,87,0.35)",
+          }}
+        >
+          {fabOpen ? <X size={20} className="text-foreground" /> : <Plus size={22} className="text-primary-foreground" />}
+        </button>
+      </div>
     </div>
   );
 };
 
 export default BrainView;
+

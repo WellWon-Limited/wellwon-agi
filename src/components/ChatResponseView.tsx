@@ -105,14 +105,26 @@ const ChatResponseView = ({ userQuery, onSend }: ChatResponseViewProps) => {
 
         {/* AI response */}
         <div>
+          {/* Expert badges */}
+          <div className="flex items-center gap-1.5 mb-3 flex-wrap">
+            {[
+              { label: "$Finance", color: "text-emerald-400", bg: "rgba(16,185,129,0.10)", border: "rgba(16,185,129,0.20)" },
+              { label: "Strategy", color: "text-blue-400", bg: "rgba(74,158,255,0.10)", border: "rgba(74,158,255,0.20)" },
+              { label: "Marketing", color: "text-violet-400", bg: "rgba(183,124,255,0.10)", border: "rgba(183,124,255,0.20)" },
+            ].map((badge, i) => (
+              <span key={i} className={`font-mono text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-full ${badge.color}`}
+                style={{ background: badge.bg, border: `1px solid ${badge.border}` }}>
+                {badge.label}
+              </span>
+            ))}
+          </div>
+
           {/* JARVIS label */}
           <div className="flex items-center gap-2.5 mb-5">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(234,56,87,0.15)" }}>
               <Sparkles size={16} className="text-primary" />
             </div>
-            <span className="text-[15px] font-semibold text-foreground">
-              JARVIS
-            </span>
+            <span className="text-[15px] font-semibold text-foreground">JARVIS</span>
             <span className="font-mono text-[9px] tracking-widest uppercase px-2 py-0.5 rounded-full text-primary" style={{ background: "rgba(234,56,87,0.10)", border: "1px solid rgba(234,56,87,0.20)" }}>
               Slow path
             </span>
